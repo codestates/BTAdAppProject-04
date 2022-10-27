@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { XIcon } from "@heroicons/react/solid";
 import {
@@ -12,27 +13,67 @@ import ThemeContext from "../../context/theme-context";
 import { useMoralis } from "react-moralis";
 import { Oval } from "react-loader-spinner";
 import ChainContext from "../../context/chain-context";
+import Web3 from 'web3';
+declare let window: any;
 
 type LoginMethodModalProps = {
   close(val: boolean): void;
 };
+
 
 const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
   const { t } = useTranslation();
   const themeCtx = React.useContext(ThemeContext);
   const chainCtx = React.useContext(ChainContext);
   const [isCopying, setisCopying] = React.useState(false);
+  const [isAuthenticated, setisAuthenticated] = React.useState(false);
+  const [isAuthenticating, setisAuthenticating] = React.useState(false);
   const [walletChosen, setWalletChosen] = React.useState("");
-  const { authenticate, isAuthenticated, logout, isAuthenticating, user } = useMoralis();
+  const [shortUserAddress, setshortUserAddress] = React.useState("");
+
+ /*  const { authenticate, isAuthenticated, logout, isAuthenticating, user } = useMoralis();
   const address = user?.attributes.ethAddress;
   const shortUserAddress =
     String(user?.attributes.ethAddress).slice(0, 6) +
     "..." +
-    String(user?.attributes.ethAddress).slice(-4);
+    String(user?.attributes.ethAddress).slice(-4); */
+
+    const [web3, setWeb3] = useState();
+    const [account, setAccount] = useState('');
+
+    useEffect(() => {
+      if (typeof window.ethereum !== 'undefined') {
+        // window.ethereum이 있다면
+        try {
+          const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
+          console.log(web);
+          //alert(web);
+          //setWeb3(web);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }, []);
 
   const loginMetamask = async () => {
     console.log("yes");
-    if (!isAuthenticated) {
+    
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
+    setAccount(accounts[0]);
+    setshortUserAddress(
+    String(accounts[0]).slice(0, 6) +
+    "..." +
+    String(accounts[0]).slice(-4));
+
+    alert(accounts[0]);
+
+    setisAuthenticated(true);
+    setisAuthenticating(false);
+    setWalletChosen("Metamask");
+
+    /* if (!isAuthenticated) {
       await authenticate({
         provider: "metamask",
         signingMessage: "Sign in with Superswap",
@@ -43,10 +84,10 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
           console.log(error);
         });
       setWalletChosen("Metamask");
-    }
+    } */
   };
 
-  const loginWC = async () => {
+  /* const loginWC = async () => {
     if (!isAuthenticated) {
       await authenticate({
         provider: "walletconnect",
@@ -60,11 +101,11 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
         });
     }
     setWalletChosen("WalletConnect");
-  };
+  }; */
 
   const handleCopy = () => {
     setisCopying(true);
-    navigator.clipboard.writeText(address);
+    navigator.clipboard.writeText(account);
     setTimeout(() => {
       setisCopying(false);
     }, 1000);
@@ -101,7 +142,7 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
               <img src={metamask} alt="metamask" className="h-8 w-8" />
             </div>
 
-            <div
+            {/* <div
               className={`w-full h-[73px] flex justify-between items-center py-2 px-4 rounded-2xl ${
                 themeCtx.isLight ? "bg-gray-100" : "bg-blue-800"
               } cursor-pointer`}
@@ -109,7 +150,7 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
             >
               <span>{t("login.wc")}</span>
               <img src={wc} alt="wallet connect" className="h-8 w-8" />
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -146,7 +187,7 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
                       ? "border border-orange-400 text-orange-400"
                       : "bg-gray-600 text-white"
                   } cursor-pointer`}
-                  onClick={logout}
+                  //onClick={logout}
                 >
                   {t("login.disconnect")}
                 </span>
@@ -176,7 +217,7 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
                 )}
                 {chainCtx.chain === "eth" && (
                   <a
-                    href={`https://etherscan.io/address/${address}`}
+                    href={`https://goerli.etherscan.io/address/${account}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-sm flex "
@@ -185,28 +226,7 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
                     {t("login.view")}
                   </a>
                 )}
-                {chainCtx.chain === "polygon" && (
-                  <a
-                    href={`https://polygonscan.com/address/${address}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm flex "
-                  >
-                    <ExternalLinkIcon className="h-4 w-4" />
-                    {t("login.view")}
-                  </a>
-                )}
-                {chainCtx.chain === "bsc" && (
-                  <a
-                    href={`https://bscscan.com/address/${address}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm flex "
-                  >
-                    <ExternalLinkIcon className="h-4 w-4" />
-                    {t("login.view")}
-                  </a>
-                )}
+                
               </div>
             </div>
           </div>

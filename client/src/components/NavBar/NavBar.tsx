@@ -14,6 +14,9 @@ import { useMoralis, useNativeBalance } from "react-moralis";
 import type { Chain } from "../../types";
 import LoginMethodModal from "../UI/LoginMethodModal";
 
+import Web3 from 'web3';
+declare let window: any;
+
 type NavBarProps = {
   loginModalOpen: boolean;
   setLoginModalOpen(val: boolean): void;
@@ -32,6 +35,28 @@ const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element
   const [chooseNetwork, setChooseNetwork] = React.useState(false);
   const [activeChain, setActiveChain] = React.useState<Chain>("eth");
   const [showOptions, setShowOptions] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window.ethereum !== 'undefined') {
+      // window.ethereum이 있다면
+      try {
+        alert("bb");
+        const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
+        console.log(web);
+        //let address = web.eth.getAccounts();
+
+        const accounts = window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        //setAccount(accounts[0]);
+
+        alert(accounts[0]);
+        //setWeb3(web);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, []);
 
   React.useEffect(() => {
     if (isAuthenticated) {

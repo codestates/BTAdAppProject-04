@@ -11,6 +11,8 @@ import { useLocation } from "react-router-dom";
 import Transactions from "./pages/Transactions";
 import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
+import Web3 from 'web3';
+declare let window: any;
 
 function App(): JSX.Element {
   const chainCtx = useContext(ChainContext);
@@ -35,12 +37,29 @@ function App(): JSX.Element {
     setErrorMessage("");
   };
 
+  const [web3, setWeb3] = React.useState();
+    const [account, setAccount] = React.useState('');
+
+    React.useEffect(() => {
+      if (typeof window.ethereum !== 'undefined') {
+        // window.ethereum이 있다면
+        try {
+          const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
+          console.log(web);
+          //alert(web);
+          //setWeb3(web);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }, []);
+
   React.useEffect(() => {
     const updateNetwork = async () => {
       if (isAuthenticated) {
         if (chainCtx.chain === "eth") await switchNetwork("0x1");
-        if (chainCtx.chain === "bsc") await switchNetwork("0x38");
-        if (chainCtx.chain === "polygon") await switchNetwork("0x89");
+        //if (chainCtx.chain === "bsc") await switchNetwork("0x38");
+        //if (chainCtx.chain === "polygon") await switchNetwork("0x89");
       }
     };
     if (isInitialized) {

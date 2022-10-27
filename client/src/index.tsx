@@ -12,7 +12,7 @@ import { ChainContextProvider } from "./context/chain-context";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL_MORALIS!
-const APP_ID = process.env.REACT_APP_ID_MORALIS!
+const APP_ID = 'cEa3Q93ib30ySNAsqMKcUKvLCJk3gf7oTOqqwiQLKu0kMtncrozxPpPB2Illayw2'!
 
 root.render(
   <React.StrictMode>
