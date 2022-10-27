@@ -22,8 +22,8 @@ type NavBarProps = {
 const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element => {
   const { t } = useTranslation();
   const windowWidth = useWindowWidth();
-  const isDesktop = windowWidth >= 920;
-  const isBigDesktop = windowWidth >= 1250;
+  const isDesktop = windowWidth >= 800;
+  // const isBigDesktop = windowWidth >= 1250;
   const [address, setAddress] = React.useState("");
   const [accBalance, setAccBalance] = React.useState<string | null>("");
   const { user, isAuthenticated } = useMoralis();
@@ -45,14 +45,14 @@ const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element
       {loginModalOpen && <LoginMethodModal close={setLoginModalOpen} />}
       <nav className="w-screen h-20 bg-transparent p-3 mb-28">
         <div
-          className={`w-full h-full flex items-center ${!isDesktop && "justify-between"}`}
+          className={`w-full h-full flex items-center ${"justify-end"}`}
         >
-          
-          {isDesktop}
+          {/*<NavLogo />*/}
+          {/*{isDesktop && <NavTabSwitcher />}*/}
           <div
-            className={`flex justify-end ${
-              isDesktop ? "basis-3/4" : "basis-1/4"
-            } space-x-2 h-12`}
+              className={`flex justify-end ${
+                  isDesktop ? "basis-1/4" : "basis-4/4"
+              } space-x-2 h-12`}
           >
             </div>
 
@@ -81,10 +81,10 @@ const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element
             <div
               className={`flex items-center justify-center rounded-2xl py-2 px-3 ${
                 isLight ? "bg-white" : "bg-blue-600"
-              }`}
+              } ml-3` }
             >
               <span
-                className="h-full w-full flex items-center cursor-pointer"
+                className={`h-full w-full flex items-center cursor-pointer`}
                 onClick={() => setShowOptions(!showOptions)}
               >
                 <DotsHorizontalIcon

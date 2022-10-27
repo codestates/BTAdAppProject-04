@@ -91,11 +91,12 @@ function App(): JSX.Element {
           setMadeTx={setMadeTx}
         />
       )}
-      {!isDesktop && (
-        <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">
-          <NavTabSwitcher />
-        </div>
-      )}
+      {/*화면사이즈 줄어들 때 스왑/트랜잭션 버튼 생성*/}
+      {/*{!isDesktop && (*/}
+      {/*  <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">*/}
+      {/*    <NavTabSwitcher />*/}
+      {/*  </div>*/}
+      {/*)}*/}
     </div>
   );
 }

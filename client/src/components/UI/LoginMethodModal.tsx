@@ -46,21 +46,21 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
     }
   };
 
-  const loginWC = async () => {
-    if (!isAuthenticated) {
-      await authenticate({
-        provider: "walletconnect",
-        signingMessage: "Sign in with Superswap",
-      })
-        .then(function (user) {
-          console.log(user!.get("ethAddress"));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-    setWalletChosen("WalletConnect");
-  };
+  // const loginWC = async () => {
+  //   if (!isAuthenticated) {
+  //     await authenticate({
+  //       provider: "walletconnect",
+  //       signingMessage: "Sign in with Superswap",
+  //     })
+  //       .then(function (user) {
+  //         console.log(user!.get("ethAddress"));
+  //       })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //       });
+  //   }
+  //   setWalletChosen("WalletConnect");
+  // };
 
   const handleCopy = () => {
     setisCopying(true);
@@ -101,15 +101,15 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
               <img src={metamask} alt="metamask" className="h-8 w-8" />
             </div>
 
-            <div
-              className={`w-full h-[73px] flex justify-between items-center py-2 px-4 rounded-2xl ${
-                themeCtx.isLight ? "bg-gray-100" : "bg-blue-800"
-              } cursor-pointer`}
-              onClick={loginWC}
-            >
-              <span>{t("login.wc")}</span>
-              <img src={wc} alt="wallet connect" className="h-8 w-8" />
-            </div>
+            {/*<div*/}
+            {/*  className={`w-full h-[73px] flex justify-between items-center py-2 px-4 rounded-2xl ${*/}
+            {/*    themeCtx.isLight ? "bg-gray-100" : "bg-blue-800"*/}
+            {/*  } cursor-pointer`}*/}
+            {/*  onClick={loginWC}*/}
+            {/*>*/}
+            {/*  <span>{t("login.wc")}</span>*/}
+            {/*  <img src={wc} alt="wallet connect" className="h-8 w-8" />*/}
+            {/*</div>*/}
           </div>
         )}
 
@@ -217,9 +217,9 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
 };
 
 const styles = {
-  lightContainer: `absolute w-[350px] h-[260px] bottom-0 left-0 top-0 right-0 m-auto bg-white rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[220px] md:pb-2 rounded-xl md:py-2 md:pb-0`,
+  lightContainer: `absolute w-[350px] h-[150px] bottom-0 left-0 top-0 right-0 m-auto bg-white rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[150px] md:pb-2 rounded-xl md:py-2 md:pb-0`,
   darkContainer:
-    "absolute w-[350px] h-[260px] bottom-0 left-0 top-0 right-0 m-auto bg-blue-900 rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[220px] md:pb-2 rounded-xl md:py-2 md:pb-0 text-gray-200",
+    "absolute w-[350px] h-[150px] bottom-0 left-0 top-0 right-0 m-auto bg-blue-900 rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[150px] md:pb-2 rounded-xl md:py-2 md:pb-0 text-gray-200",
 };
 
 export default LoginMethodModal;
