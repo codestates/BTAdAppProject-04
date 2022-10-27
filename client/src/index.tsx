@@ -8,6 +8,7 @@ import { MoralisProvider } from "react-moralis";
 import { ThemeContextProvider } from "./context/theme-context";
 import { AuthContextProvider } from "./context/auth-context";
 import { ChainContextProvider } from "./context/chain-context";
+import { SwitchContextProvider} from "./context/switch-context";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
@@ -23,6 +24,7 @@ root.render(
       <ThemeContextProvider>
         <ChainContextProvider>
           <AuthContextProvider>
+            <SwitchContextProvider>
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<App />} />
@@ -30,6 +32,7 @@ root.render(
                 <Route path="transactions" element={<App />} />
               </Routes>
             </BrowserRouter>
+            </SwitchContextProvider>
           </AuthContextProvider>
         </ChainContextProvider>
       </ThemeContextProvider>

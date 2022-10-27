@@ -17,23 +17,24 @@ type MoreOptionsDropDownProps = {
 
 const MoreOptionsDropDown = ({ showOptions }: MoreOptionsDropDownProps): JSX.Element => {
   const { t } = useTranslation();
-  const [changeLanguage, setChangeLanguage] = React.useState(false);
+  // const [changeLanguage, setChangeLanguage] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState<LanguageType>("en");
   const { isLight, changeTheme } = React.useContext(ThemeContext);
 
-  const selectLanguage = (lng: string) => {
-    setIsSelected(lng as LanguageType);
-    i18n.changeLanguage(lng);
-  };
+  // const selectLanguage = (lng: string) => {
+  //   setIsSelected(lng as LanguageType);
+  //   i18n.changeLanguage(lng);
+  // };
 
   return (
     <span
-      className="bg-white min-w-[180px] h-20 rounded-lg absolute right-3 top-20 shadow-md p-3 flex flex-col justify-between"
+      // className="bg-white min-w-[180px] h-20 rounded-lg absolute right-3 top-20 shadow-md p-3 flex flex-col justify-between"
+      className="bg-white min-w-[180px] rounded-lg absolute right-3 top-20 shadow-md p-3 flex flex-col justify-between"
       onMouseLeave={() => showOptions(false)}
     >
-      {changeLanguage === false && (
+      {/*{changeLanguage === false && (*/}
         <>
-          
+
           {isLight && (
             <>
               <button
@@ -57,31 +58,31 @@ const MoreOptionsDropDown = ({ showOptions }: MoreOptionsDropDownProps): JSX.Ele
             </>
           )}
         </>
-      )}
-      {changeLanguage === true && (
-        <span className="h-full flex flex-col justify-between">
-          <button
-            className="w-full text-gray-400 flex justify-between text-sm mb-1 outline-none cursor-pointer"
-            onClick={() => setChangeLanguage(false)}
-          >
-            <ChevronLeftIcon className="h-3 w-3" />
-          </button>
-          <button
-            className="w-full text-gray-400 flex justify-between text-sm outline-none cursor-pointer"
-            onClick={() => selectLanguage("en")}
-          >
-            <span className="select-none">{t("nav.language.english")}</span>
-            {isSelected === "en" && <CheckIcon className="h-3 w-3" />}
-          </button>
-          <button
-            className="w-full text-gray-400 flex justify-between text-sm outline-none cursor-pointer"
-            onClick={() => selectLanguage("es")}
-          >
-            <span className="select-none">{t("nav.language.spanish")}</span>
-            {isSelected === "es" && <CheckIcon className="h-3 w-3" />}
-          </button>
-        </span>
-      )}
+      {/*)}*/}
+      {/*{changeLanguage === true && (*/}
+      {/*  <span className="h-full flex flex-col justify-between">*/}
+      {/*    <button*/}
+      {/*      className="w-full text-gray-400 flex justify-between text-sm mb-1 outline-none cursor-pointer"*/}
+      {/*      onClick={() => setChangeLanguage(false)}*/}
+      {/*    >*/}
+      {/*      <ChevronLeftIcon className="h-3 w-3" />*/}
+      {/*    </button>*/}
+      {/*    <button*/}
+      {/*      className="w-full text-gray-400 flex justify-between text-sm outline-none cursor-pointer"*/}
+      {/*      onClick={() => selectLanguage("en")}*/}
+      {/*    >*/}
+      {/*      <span className="select-none">{t("nav.language.english")}</span>*/}
+      {/*      {isSelected === "en" && <CheckIcon className="h-3 w-3" />}*/}
+      {/*    </button>*/}
+      {/*    <button*/}
+      {/*      className="w-full text-gray-400 flex justify-between text-sm outline-none cursor-pointer"*/}
+      {/*      onClick={() => selectLanguage("es")}*/}
+      {/*    >*/}
+      {/*      <span className="select-none">{t("nav.language.spanish")}</span>*/}
+      {/*      {isSelected === "es" && <CheckIcon className="h-3 w-3" />}*/}
+      {/*    </button>*/}
+      {/*  </span>*/}
+      {/*)}*/}
     </span>
   );
 };

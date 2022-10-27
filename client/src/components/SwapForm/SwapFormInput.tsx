@@ -30,7 +30,6 @@ const SwapFormInput = ({
   const [isSelecting, setIsSelecting] = React.useState(false);
   const { t } = useTranslation();
   const [inputValue, setInputValue] = React.useState<number | undefined | string>();
-
   React.useEffect(() => {
     if (value === 0 || value === "") {
       setInputValue("");
@@ -42,13 +41,24 @@ const SwapFormInput = ({
   return (
     <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex items-center p-5">
       <div className="flex items-center w-full ">
-        <DebounceInput
-          className="min-w-0 h-full rounded-2xl bg-gray-100 text-3xl font-medium font-inc focus:outline-none px-1"
-          placeholder={t("swap_form.placeholder")}
-          type="number"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
-          value={inputValue}
-        />
+        {
+          inputValue ?
+              <DebounceInput
+                  className="min-w-0 h-full rounded-2xl bg-gray-100 text-3xl font-medium font-inc focus:outline-none px-1"
+                  placeholder={t("swap_form.placeholder")}
+                  type="number"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
+                  value={inputValue}
+              />
+              :
+              <DebounceInput
+                  className="min-w-0 h-full rounded-2xl bg-gray-100 text-3xl font-medium font-inc focus:outline-none px-1"
+                  placeholder={t("swap_form.placeholder")}
+                  type="number"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
+                  value={''}
+              />
+        }
         <SwapFormChangeTokenButton
           initial={initial}
           select={setIsSelecting}
