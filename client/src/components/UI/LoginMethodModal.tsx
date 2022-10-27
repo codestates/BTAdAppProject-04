@@ -87,40 +87,6 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
     } */
   };
 
-<<<<<<< HEAD
-  /* const loginWC = async () => {
-    if (!isAuthenticated) {
-      await authenticate({
-        provider: "walletconnect",
-        signingMessage: "Sign in with Superswap",
-      })
-        .then(function (user) {
-          console.log(user!.get("ethAddress"));
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
-    setWalletChosen("WalletConnect");
-  }; */
-=======
-  // const loginWC = async () => {
-  //   if (!isAuthenticated) {
-  //     await authenticate({
-  //       provider: "walletconnect",
-  //       signingMessage: "Sign in with Superswap",
-  //     })
-  //       .then(function (user) {
-  //         console.log(user!.get("ethAddress"));
-  //       })
-  //       .catch(function (error) {
-  //         console.log(error);
-  //       });
-  //   }
-  //   setWalletChosen("WalletConnect");
-  // };
->>>>>>> 13f586f87dcbb4805d42e467dd881e68e4350f9e
-
   const handleCopy = () => {
     setisCopying(true);
     navigator.clipboard.writeText(account);
@@ -159,28 +125,6 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
               <span>{t("login.metamask")}</span>
               <img src={metamask} alt="metamask" className="h-8 w-8" />
             </div>
-
-<<<<<<< HEAD
-            {/* <div
-              className={`w-full h-[73px] flex justify-between items-center py-2 px-4 rounded-2xl ${
-                themeCtx.isLight ? "bg-gray-100" : "bg-blue-800"
-              } cursor-pointer`}
-              onClick={loginWC}
-            >
-              <span>{t("login.wc")}</span>
-              <img src={wc} alt="wallet connect" className="h-8 w-8" />
-            </div> */}
-=======
-            {/*<div*/}
-            {/*  className={`w-full h-[73px] flex justify-between items-center py-2 px-4 rounded-2xl ${*/}
-            {/*    themeCtx.isLight ? "bg-gray-100" : "bg-blue-800"*/}
-            {/*  } cursor-pointer`}*/}
-            {/*  onClick={loginWC}*/}
-            {/*>*/}
-            {/*  <span>{t("login.wc")}</span>*/}
-            {/*  <img src={wc} alt="wallet connect" className="h-8 w-8" />*/}
-            {/*</div>*/}
->>>>>>> 13f586f87dcbb4805d42e467dd881e68e4350f9e
           </div>
         )}
 
