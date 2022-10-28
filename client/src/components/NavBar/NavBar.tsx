@@ -4,7 +4,6 @@ import { ChevronDownIcon, DotsHorizontalIcon } from "@heroicons/react/solid";
 import ethLogo from "../../assets/images/eth.png";
 import maticLogo from "../../assets/images/matic.svg";
 import bscLogo from "../../assets/images/bsc.png";
-import NavLogo from "./NavLogo";
 import NavTabSwitcher from "./NavTabSwitcher";
 import useWindowWidth from "../../hooks/useWindowWidth";
 import MoreOptionsDropDown from "./MoreOptionsDropDown";
@@ -13,61 +12,85 @@ import ChooseNetwork from "./ChooseNetwork";
 import { useMoralis, useNativeBalance } from "react-moralis";
 import type { Chain } from "../../types";
 import LoginMethodModal from "../UI/LoginMethodModal";
-
 import Web3 from 'web3';
+//const {ethers} = require("ethers");
+//const provider = new ethers.providers.JsonRpcProvider(process.env.NODE_URI);
 declare let window: any;
 
 type NavBarProps = {
   loginModalOpen: boolean;
   setLoginModalOpen(val: boolean): void;
+  isLogin: boolean;
+  setIsLogin(val: boolean): void;
 };
 
-const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element => {
+const NavBar = ({ isLogin, setIsLogin, loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element => {
   const { t } = useTranslation();
   const windowWidth = useWindowWidth();
   const isDesktop = windowWidth >= 800;
-  // const isBigDesktop = windowWidth >= 1250;
+  //const isBigDesktop = windowWidth >= 1250;
   const [address, setAddress] = React.useState("");
   const [accBalance, setAccBalance] = React.useState<string | null>("");
-  const { user, isAuthenticated } = useMoralis();
+  const [isAuthenticated, setisAuthenticated] = React.useState(false);
+  //const { user, isAuthenticated } = useMoralis();
   const { isLight } = React.useContext(ThemeContext);
   const { data: balance } = useNativeBalance();
+  const [showOptions, setShowOptions] = React.useState(false);
   const [chooseNetwork, setChooseNetwork] = React.useState(false);
   const [activeChain, setActiveChain] = React.useState<Chain>("eth");
-  const [showOptions, setShowOptions] = React.useState(false);
 
   React.useEffect(() => {
-    if (typeof window.ethereum !== 'undefined') {
-      // window.ethereum이 있다면
-      try {
-        alert("bb");
-        const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
-        console.log(web);
-        //let address = web.eth.getAccounts();
-
-        const accounts = window.ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        //setAccount(accounts[0]);
-
-        alert(accounts[0]);
-        //setWeb3(web);
-      } catch (err) {
-        console.log(err);
+    console.log(isLogin);
+    getAccount(); // 계정 설정
+    getBalance(); // 이더 잔액 업데이트
+  }, [isLogin]);
+  
+  const getAccount = async () => {
+      if (typeof(window.ethereum) === "undefined") {
+          setAddress((""));
+      } else {
+          const web3 = new Web3(window.ethereum);
+          await web3
+              .eth
+              .getAccounts((error, result) => {
+                  if (error) {
+                      console.log(error);
+                  } else {
+                      if (result[0] !== undefined) {
+                          setAddress(result[0]);
+                          setisAuthenticated(true);
+                      } else {
+                          setAddress("");
+                          setisAuthenticated(false);
+                      }
+                  }
+              });
       }
-    }
-  }, []);
+  };
+  const getBalance = async () => {
+      if (address !== "") {
+          const web3 = new Web3(window.ethereum);
+          const balance = await web3
+              .eth
+              .getBalance(address); // 이더 잔액을 가져옴
+         
+          let ethBalance = Number(web3.utils.fromWei(balance, "ether"));
+          setAccBalance(ethBalance.toFixed(4));
+      }
+  };
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      setAddress(user?.attributes.ethAddress);
-      setAccBalance(balance.formatted);
+      getAccount(); // 계정 설정
+      getBalance(); // 계정 설정
+      //setAddress(user?.attributes.ethAddress);
+      //setAccBalance(balance.formatted);
     }
-  }, [isAuthenticated, user?.attributes, balance.formatted]);
+  }, [isAuthenticated, address, accBalance]);
 
   return (
     <>
-      {loginModalOpen && <LoginMethodModal close={setLoginModalOpen} />}
+      {loginModalOpen && <LoginMethodModal close={setLoginModalOpen} login={setIsLogin} />}
       <nav className="w-screen h-20 bg-transparent p-3 mb-28">
         <div
           className={`w-full h-full flex items-center ${"justify-end"}`}
@@ -96,7 +119,7 @@ const NavBar = ({ loginModalOpen, setLoginModalOpen }: NavBarProps): JSX.Element
                 className={isLight ? styles.connectLight : styles.connectDark}
                 onClick={() => setLoginModalOpen(true)}
               >
-                <span className="p-1 text-xs">{accBalance}</span>
+                <span className="p-1 text-xs">{accBalance} ETH</span>
                 <span className={isLight ? styles.addressLight : styles.addressDark}>
                   {address.slice(0, 6) + "..." + address.slice(-4)}
                 </span>

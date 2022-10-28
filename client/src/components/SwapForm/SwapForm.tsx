@@ -13,6 +13,8 @@ import SwitchButton from "./SwitchButton";
 
 type SwapFormProps = {
     tokenList: TokenList;
+    isLogin: boolean;
+    setIsLogin(val: boolean): void;
     setLoginModalOpen(val: boolean): void;
     openTransactionModal(val: boolean): void;
     getTxHash(hash: string): void;
@@ -22,6 +24,8 @@ type SwapFormProps = {
 
 const SwapForm = ({
                       tokenList,
+                      isLogin,
+                      setIsLogin,
                       setLoginModalOpen,
                       openTransactionModal,
                       getTxHash,
@@ -188,7 +192,7 @@ const SwapForm = ({
                         </div>
                     </div>
                 )}
-                <SwapButton setLoginModalOpen={setLoginModalOpen} trySwap={makeSwap}/>
+                <SwapButton setLoginModalOpen={setLoginModalOpen} isLogin={isLogin} setIsLogin={setIsLogin} trySwap={makeSwap}/>
             </div>
         </form>
     );

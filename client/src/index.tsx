@@ -12,8 +12,8 @@ import { SwitchContextProvider} from "./context/switch-context";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL_MORALIS!
-const APP_ID = 'cEa3Q93ib30ySNAsqMKcUKvLCJk3gf7oTOqqwiQLKu0kMtncrozxPpPB2Illayw2'!
+const SERVER_URL = '1';
+const APP_ID = '001';
 
 root.render(
   <React.StrictMode>

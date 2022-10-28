@@ -30,6 +30,7 @@ function App(): JSX.Element {
   const [madeTx, setMadeTx] = React.useState(false);
   const location = useLocation();
   const pathName = location.pathname;
+  const [isLogin, setIsLogin] = React.useState(false);
 
   const closeModal = () => {
     setShowTransactionModal(false);
@@ -37,22 +38,33 @@ function App(): JSX.Element {
     setErrorMessage("");
   };
 
-  const [web3, setWeb3] = React.useState();
-    const [account, setAccount] = React.useState('');
+  const [web3, setWeb3] = React.useState(Object);
+  const [account, setAccount] = React.useState('');
 
-    React.useEffect(() => {
-      if (typeof window.ethereum !== 'undefined') {
-        // window.ethereum이 있다면
-        try {
-          const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
-          console.log(web);
-          //alert(web);
-          //setWeb3(web);
-        } catch (err) {
-          console.log(err);
-        }
+  React.useEffect(() => {
+    getAccount(); // 계정 설정
+  }, []);
+
+  const getAccount = async () => {
+    if (typeof(window.ethereum) == "undefined") {
+        setAccount((""));
+    } else {
+        const web3 = new Web3(window.ethereum);
+        await web3
+            .eth
+            .getAccounts((error, result) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    if (result[0] !== undefined) {
+                        setAccount(result[0]);
+                        setWeb3(web3);
+                      
+                    }
+                }
+            });
       }
-    }, []);
+    };
 
   React.useEffect(() => {
     const updateNetwork = async () => {
@@ -91,10 +103,12 @@ function App(): JSX.Element {
           errorMessage={errorMessage}
         />
       )}
-      <NavBar loginModalOpen={isLoginModalOpen} setLoginModalOpen={setIsLoginModalOpen} />
+      <NavBar isLogin={isLogin} setIsLogin={setIsLogin} loginModalOpen={isLoginModalOpen} setLoginModalOpen={setIsLoginModalOpen} />
       {pathName === "/" && (
         <Swap
           tokenList={tokenList}
+          isLogin={isLogin}
+          setIsLogin={setIsLogin}
           setLoginModalOpen={setIsLoginModalOpen}
           openTransactionModal={setShowTransactionModal}
           getTxHash={setTxHash}

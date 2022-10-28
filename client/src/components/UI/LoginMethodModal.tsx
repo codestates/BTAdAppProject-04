@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { XIcon } from "@heroicons/react/solid";
 import {
@@ -7,71 +7,78 @@ import {
   ExternalLinkIcon,
   CheckCircleIcon,
 } from "@heroicons/react/outline";
-import wc from "../../assets/images/wc.svg";
 import metamask from "../../assets/images/metamask.png";
 import ThemeContext from "../../context/theme-context";
-import { useMoralis } from "react-moralis";
 import { Oval } from "react-loader-spinner";
 import ChainContext from "../../context/chain-context";
 import Web3 from 'web3';
+import { useMoralis } from "react-moralis";
 declare let window: any;
 
 type LoginMethodModalProps = {
   close(val: boolean): void;
+  login(val: boolean): void;
 };
 
-
-const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
+const LoginMethodModal = ({ close, login }: LoginMethodModalProps): JSX.Element => {
+  const themeCtx = useContext(ThemeContext);
+  const chainCtx = useContext(ChainContext);
+  const [isCopying, setisCopying] = useState(false);
+  const [isAuthenticated, setisAuthenticated] = useState(false);
+  const [isAuthenticating, setisAuthenticating] = useState(false);
+  const [walletChosen, setWalletChosen] = useState("");
+  const [shortUserAddress, setshortUserAddress] = useState("");
+  const [web3, setWeb3] = useState(null);
+  const [account, setAccount] = useState("");
   const { t } = useTranslation();
-  const themeCtx = React.useContext(ThemeContext);
-  const chainCtx = React.useContext(ChainContext);
-  const [isCopying, setisCopying] = React.useState(false);
-  const [isAuthenticated, setisAuthenticated] = React.useState(false);
-  const [isAuthenticating, setisAuthenticating] = React.useState(false);
-  const [walletChosen, setWalletChosen] = React.useState("");
-  const [shortUserAddress, setshortUserAddress] = React.useState("");
+  //const { authenticate, isAuthenticated, logout, isAuthenticating, user } = useMoralis();
 
- /*  const { authenticate, isAuthenticated, logout, isAuthenticating, user } = useMoralis();
-  const address = user?.attributes.ethAddress;
-  const shortUserAddress =
-    String(user?.attributes.ethAddress).slice(0, 6) +
-    "..." +
-    String(user?.attributes.ethAddress).slice(-4); */
+  useEffect(() => {
+    getAccount(); // 계정 설정
+  }, []);
 
-    const [web3, setWeb3] = useState();
-    const [account, setAccount] = useState('');
-
-    useEffect(() => {
-      if (typeof window.ethereum !== 'undefined') {
-        // window.ethereum이 있다면
-        try {
-          const web = new Web3(window.ethereum); // 새로운 web3 객체를 만든다
-          console.log(web);
-          //alert(web);
-          //setWeb3(web);
-        } catch (err) {
-          console.log(err);
-        }
+  const getAccount = async () => {
+    if (typeof(window.ethereum) == "undefined") {
+        setAccount((""));
+    } else {
+        const web3 = new Web3(window.ethereum);
+        await web3
+            .eth
+            .getAccounts((error, result) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    if (result[0] !== undefined) {
+                        setAccount(result[0]);
+                        setshortUserAddress(
+                            String(result[0]).slice(0, 6) + "..." + String(result[0]).slice(-4)
+                        );
+                        setisAuthenticated(true);
+                        setisAuthenticating(false);
+                        setWalletChosen("Metamask");
+                    }
+                }
+            });
       }
-    }, []);
+    };
 
   const loginMetamask = async () => {
-    console.log("yes");
-    
+    console.log("login");
+  
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts',
     });
-    setAccount(accounts[0]);
+    setAccount(accounts);
     setshortUserAddress(
-    String(accounts[0]).slice(0, 6) +
+    String(accounts).slice(0, 6) +
     "..." +
-    String(accounts[0]).slice(-4));
-
-    alert(accounts[0]);
+    String(accounts).slice(-4));
 
     setisAuthenticated(true);
     setisAuthenticating(false);
     setWalletChosen("Metamask");
+
+    login(true);
 
     /* if (!isAuthenticated) {
       await authenticate({
@@ -83,7 +90,6 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
         .catch(function (error) {
           console.log(error);
         });
-      setWalletChosen("Metamask");
     } */
   };
 
@@ -211,9 +217,10 @@ const LoginMethodModal = ({ close }: LoginMethodModalProps): JSX.Element => {
 };
 
 const styles = {
-  lightContainer: `absolute w-[350px] h-[150px] bottom-0 left-0 top-0 right-0 m-auto bg-white rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[150px] md:pb-2 rounded-xl md:py-2 md:pb-0`,
+  lightContainer: `absolute w-[350px] h-[260px] bottom-0 left-0 top-0 right-0 m-auto bg-white rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[220px] md:pb-2 rounded-xl md:py-2 md:pb-0`,
   darkContainer:
-    "absolute w-[350px] h-[150px] bottom-0 left-0 top-0 right-0 m-auto bg-blue-900 rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[150px] md:pb-2 rounded-xl md:py-2 md:pb-0 text-gray-200",
+    "absolute w-[350px] h-[260px] bottom-0 left-0 top-0 right-0 m-auto bg-blue-900 rounded-t-2xl z-40 py-5 flex flex-col md:w-[450px] md:h-[220px] md:pb-2 rounded-xl md:py-2 md:pb-0 text-gray-200",
 };
 
 export default LoginMethodModal;
+

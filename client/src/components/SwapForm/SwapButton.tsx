@@ -1,17 +1,52 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import ThemeContext from "../../context/theme-context";
+import Web3 from 'web3';
 import { useMoralis } from "react-moralis";
+declare let window: any;
 
 type SwapButtonProps = {
   setLoginModalOpen(val: boolean): void;
+  isLogin: boolean;
+  setIsLogin(val: boolean): void;
   trySwap(): void;
 };
 
-const SwapButton = ({ setLoginModalOpen, trySwap }: SwapButtonProps): JSX.Element => {
+const SwapButton = ({ setLoginModalOpen, isLogin, setIsLogin, trySwap }: SwapButtonProps): JSX.Element => {
   const { t } = useTranslation();
   const { isLight } = React.useContext(ThemeContext);
-  const { isAuthenticated } = useMoralis();
+  //const { isAuthenticated } = useMoralis();
+  const [isAuthenticated, setisAuthenticated] = React.useState(false);
+  
+  React.useEffect(() => {
+      getAccount(); 
+  }, []);
+  React.useEffect(() => {
+    console.log(isLogin);
+    setisAuthenticated(true);
+}, [isLogin]);
+
+  const getAccount = async () => {
+      if (typeof(window.ethereum) == "undefined") {
+          setisAuthenticated(false);
+      } else {
+          const web3 = new Web3(window.ethereum);
+          await web3
+              .eth
+              .getAccounts((error, result) => {
+                  if (error) {
+                      setisAuthenticated(false);
+                      console.log(error);
+                  } else {
+                      if (result[0] !== undefined) {
+                          setisAuthenticated(true);
+                      } else {
+                          setisAuthenticated(false);
+                      }
+                  }
+              });
+      }
+  };
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
