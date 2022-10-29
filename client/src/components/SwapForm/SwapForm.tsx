@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useContext, useEffect } from 'react';
 import SwapFormHeader from "./SwapFormHeader";
 import SwapFormInput from "./SwapFormInput";
 import SwapButton from "./SwapButton";
@@ -10,6 +11,10 @@ import Moralis from "moralis";
 import {useTranslation} from "react-i18next";
 import SwitchContext from "../../context/switch-context";
 import SwitchButton from "./SwitchButton";
+import { ethers } from 'ethers';
+import { getPrice, runSwap } from '../../AlphaRouterService'
+
+declare let window: any;
 
 type SwapFormProps = {
     tokenList: TokenList;
@@ -32,22 +37,85 @@ const SwapForm = ({
                       getErrorMessage,
                       setMadeTx,
                   }: SwapFormProps): JSX.Element => {
-    const {isLight} = React.useContext(ThemeContext);
-    const {chain} = React.useContext(ChainContext);
-    const {isSwitch} = React.useContext(SwitchContext);
+    const {isLight} = useContext(ThemeContext);
+    const {chain} = useContext(ChainContext);
+    const {isSwitch} = useContext(SwitchContext);
     const {t} = useTranslation();
-    const [firstToken, setFirstToken] = React.useState<SelectedToken>({decimals: 0});
-    const [secondToken, setSecondToken] = React.useState<SelectedToken>({decimals: 0});
-    const [firstAmount, setFirstAmount] = React.useState<number | undefined | string>();
-    const [secondAmount, setSecondAmount] = React.useState<number | undefined | string>();
-    const [gas, setGas] = React.useState<number | undefined | string>();
+    const [firstToken, setFirstToken] = useState<SelectedToken>({decimals: 0});
+    const [secondToken, setSecondToken] = useState<SelectedToken>({decimals: 0});
+    const [firstAmount, setFirstAmount] = useState<number | undefined | string>();
+    const [secondAmount, setSecondAmount] = useState<number | undefined | string>();
+    const [gas, setGas] = useState<number | undefined | string>();
 
-    React.useEffect(() => {
-        setFirstToken({
-            address: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-            decimals: 18,
-        });
-    }, [chain]);
+    const [provider, setProvider] = useState<any>();
+    const [signer, setSigner] = useState<any>();
+    const [signerAddress, setSignerAddress] = useState("");
+    const [ratio, setRatio] = useState<number | undefined | string>();
+    const [transaction, setTransaction] = useState({});
+
+    useEffect(() => {
+        onLoad();
+    }, []);
+        
+    const onLoad = async () => {
+        const provider = await new ethers.providers.Web3Provider(window.ethereum);
+        setProvider(provider);
+        const signer = provider.getSigner();
+        setSigner(signer);
+
+        signer.getAddress()
+        .then(address => {
+            setSignerAddress(address);
+        })
+    };
+      
+    const makeSwap = async () => {
+
+        try {
+            const swap = getPrice(
+                firstAmount,
+                1, //slippageAmount
+                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+                signerAddress
+            ).then(data => {
+                setTransaction(data[0]);
+            })
+
+            console.log(transaction);      
+        } catch (error) {
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String((error as Error).message);
+            getErrorMessage(message);
+        }
+
+        runSwap(transaction, signer); //스왑 호출
+
+        setFirstAmount("");
+        setSecondAmount("");
+        setGas("");
+        /* const amount = Number(Number(firstAmount) * 10 ** firstToken.decimals);
+        const address = await Moralis.User.current()?.get("ethAddress");
+        openTransactionModal(true);
+        try {
+            const res = await Moralis.Plugins.oneInch.swap({
+                chain: chain,
+                fromTokenAddress: firstToken.address,
+                toTokenAddress: secondToken.address,
+                amount,
+                fromAddress: address,
+                slippage: 1,
+            });
+            openTransactionModal(true);
+            getTxHash(res.transactionHash);
+            setMadeTx(true);
+        } catch (error) {
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String((error as Error).message);
+            getErrorMessage(message);
+        } */
+    };
 
     const getQuoteFirst = async (val: string) => {
         const amount = Number(Number(val) * 10 ** firstToken.decimals);
@@ -97,35 +165,6 @@ const SwapForm = ({
         }
     };
 
-    const makeSwap = async () => {
-        const amount = Number(Number(firstAmount) * 10 ** firstToken.decimals);
-        const address = await Moralis.User.current()?.get("ethAddress");
-
-        openTransactionModal(true);
-
-        try {
-            const res = await Moralis.Plugins.oneInch.swap({
-                chain: chain,
-                fromTokenAddress: firstToken.address,
-                toTokenAddress: secondToken.address,
-                amount,
-                fromAddress: address,
-                slippage: 1,
-            });
-            openTransactionModal(true);
-            getTxHash(res.transactionHash);
-            setMadeTx(true);
-        } catch (error) {
-            let message;
-            if (error instanceof Error) message = error.message;
-            else message = String((error as Error).message);
-            getErrorMessage(message);
-        }
-
-        setFirstAmount("");
-        setSecondAmount("");
-        setGas("");
-    };
     return (
         <form className={isLight ? styles.light : styles.dark}>
             <div className="w-full rounded-3xl p-2 select-none ">
