@@ -1,40 +1,67 @@
-import React, {useContext, useEffect} from "react";
+import React from "react";
+import { useState, useContext, useEffect } from 'react';
 import "./App.css";
 import Swap from "./pages/Swap";
 import NavBar from "./components/NavBar/NavBar";
 import ThemeContext from "./context/theme-context";
 import { useMoralis, useChain, useOneInchTokens } from "react-moralis";
 import { TokenList } from "./types";
-import {ethers} from "ethers";
 import ChainContext from "./context/chain-context";
 import SwapResultModal from "./components/SwapForm/SwapResultModal";
 import { useLocation } from "react-router-dom";
 import Transactions from "./pages/Transactions";
 import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
-import {utils} from "./components/ethersTest/utils"
-import Web3 from 'web3';
+
+import { ethers } from 'ethers';
+import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 import Pool from "./pages/Pool";
 declare let window: any;
 
 function App(): JSX.Element {
   const chainCtx = useContext(ChainContext);
-  const { isLight } = React.useContext(ThemeContext);
+  const { isLight } = useContext(ThemeContext);
   const windowWidth = useWindowWidth();
   const isDesktop = windowWidth >= 920;
   const { isAuthenticated, isInitialized, initialize } = useMoralis();
   const { switchNetwork } = useChain();
   const { getSupportedTokens, data } = useOneInchTokens({ chain: chainCtx.chain });
-  const [tokenList, setTokenList] = React.useState<TokenList | []>([]);
-  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
-  const [showTransactionModal, setShowTransactionModal] = React.useState(false);
-  const [txHash, setTxHash] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const [madeTx, setMadeTx] = React.useState(false);
+  const [tokenList, setTokenList] = useState<TokenList | []>([]);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [madeTx, setMadeTx] = useState(false);
   const location = useLocation();
   const pathName = location.pathname;
-  const [isLogin, setIsLogin] = React.useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
+  const [provider, setProvider] = useState<any>();
+  const [signer, setSigner] = useState<any>();
+  const [signerAddress, setSignerAddress] = useState("");
+  const [inputAmount, setInputAmount] = useState<number | undefined | string>();
+  const [outputAmount, setOutputAmount] = useState<number | undefined | string>();
+  const [ratio, setRatio] = useState<number | undefined | string>();
+  const [firstBalance, setFirstBalance] = useState<number | undefined | string>();
+  const [secondBalance, setSecondBalance] = useState<number | undefined | string>();
+  //const [wethContract, setWethContract] = useState<any>();
+  //const [uniContract, setUniContract] = useState<any>();
+
+  useEffect(() => {
+    onLoad();
+  }, [])
+
+  const onLoad = async () => {
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+    const signer = provider.getSigner();
+    setSigner(signer);
+
+    //const wethContract = getWethContract();
+    //setWethContract(wethContract);
+    //const uniContract = getUniContract();
+    //setUniContract(uniContract);
+  }
 
   const closeModal = () => {
     setShowTransactionModal(false);
@@ -42,57 +69,7 @@ function App(): JSX.Element {
     setErrorMessage("");
   };
 
-
-  const [web3, setWeb3] = React.useState(Object);
-  const [account, setAccount] = React.useState('');
-
-
-  React.useEffect(() => {
-    getAccount(); // 계정 설정
-  }, []);
-
-  const getAccount = async () => {
-
-    if (typeof(window.ethereum) == "undefined") {
-        setAccount((""));
-    } else {
-        const web3 = new Web3(window.ethereum);
-        await web3
-            .eth
-            .getAccounts((error, result) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    if (result[0] !== undefined) {
-                        setAccount(result[0]);
-                        setWeb3(web3);
-
-                    }
-                }
-            });
-      }
-    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    const signer = provider.getSigner();
-    // console.log(ethers.utils.formatEther(await signer.getBalance()))
-    console.log(await utils.getCMTBalance(signer));
-    console.log(await utils.getETHBalance(signer))
-    };
-
-  React.useEffect(() => {
-    const updateNetwork = async () => {
-      if (isAuthenticated) {
-        if (chainCtx.chain === "eth") await switchNetwork("0x1");
-        //if (chainCtx.chain === "bsc") await switchNetwork("0x38");
-        //if (chainCtx.chain === "polygon") await switchNetwork("0x89");
-      }
-    };
-    if (isInitialized) {
-      updateNetwork();
-    }
-  }, [chainCtx.chain, isAuthenticated, switchNetwork, isInitialized]);
-
-  // Retrieve tokens on initial render and chain switch
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     const getTokens = async () => {
       initialize();
       await getSupportedTokens();
@@ -104,7 +81,7 @@ function App(): JSX.Element {
       const formattedData = JSON.parse(JSON.stringify(data!, null, 2));
       setTokenList(Object.values(formattedData.tokens));
     }
-  }, [data, getSupportedTokens, initialize]);
+  }, [data, getSupportedTokens, initialize]); */
 
   return (
     <div className={isLight ? styles.containerLight : styles.containerDark}>
