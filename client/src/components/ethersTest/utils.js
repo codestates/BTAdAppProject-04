@@ -1,20 +1,10 @@
 import {ethers} from 'ethers'
-const env = process.env;
 const CMT = require("../../abis/CMT.json");
 
 
-
-const utils = {
-    getCMTBalance: async (chainName) => {  // 체인 이름을 토대로 체인 오브젝트 리턴
-        const CMTContract = new ethers.Contract(env.CMT_ADDRESS, CMT.abi, signer)
-        console.log()
-        return chains.find(({chain_name}) => chain_name === chainName); //osmosis
+export const utils = {
+    getCMTBalance: async (signer) => {  // signer 의 토큰 개수 리턴
+        const CMTContract = new ethers.Contract(process.env.REACT_APP_CMT_ADDRESS, CMT.abi, signer)
+        return ethers.utils.formatEther(await CMTContract.balanceOf(signer.getAddress()))
     },
-
-
-
-
 }
-
-
-module.exports = utils;

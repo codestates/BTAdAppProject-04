@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import Transactions from "./pages/Transactions";
 import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
+import {utils} from "./components/ethersTest/utils"
 import Web3 from 'web3';
 declare let window: any;
 
@@ -50,6 +51,7 @@ function App(): JSX.Element {
   }, []);
 
   const getAccount = async () => {
+
     if (typeof(window.ethereum) == "undefined") {
         setAccount((""));
     } else {
@@ -68,6 +70,10 @@ function App(): JSX.Element {
                 }
             });
       }
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    const signer = provider.getSigner();
+    // console.log(ethers.utils.formatEther(await signer.getBalance()))
+    console.log(await utils.getCMTBalance(signer));
     };
 
   React.useEffect(() => {
