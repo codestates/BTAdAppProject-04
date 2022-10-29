@@ -14,7 +14,7 @@ import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
 import {utils} from "./components/utils/utils"
 import { ethers } from 'ethers';
-import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
+// import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 
 declare let window: any;
 
@@ -58,7 +58,8 @@ function App(): JSX.Element {
 
     // console.log(await utils.getCMTBalance(signer)); // 토큰 확인 테스트
     // console.log(await utils.getETHBalance(signer)); // 이더 확인 테스트
-    
+    console.log(await utils.getPrice(0.1, 2, Math.floor(Date.now() / 1000 + 10 * 60), await signer.getAddress()));
+
     //const wethContract = getWethContract();            
     //setWethContract(wethContract);
     //const uniContract = getUniContract();

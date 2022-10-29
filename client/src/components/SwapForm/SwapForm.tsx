@@ -12,7 +12,7 @@ import {useTranslation} from "react-i18next";
 import SwitchContext from "../../context/switch-context";
 import SwitchButton from "./SwitchButton";
 import { ethers } from 'ethers';
-import { getPrice, runSwap } from '../../AlphaRouterService'
+// import { getPrice, runSwap } from '../../AlphaRouterService'
 
 declare let window: any;
 
@@ -71,25 +71,25 @@ const SwapForm = ({
       
     const makeSwap = async () => {
 
-        try {
-            const swap = getPrice(
-                firstAmount,
-                1, //slippageAmount
-                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
-                signerAddress
-            ).then(data => {
-                setTransaction(data[0]);
-            })
-
-            console.log(transaction);      
-        } catch (error) {
-            let message;
-            if (error instanceof Error) message = error.message;
-            else message = String((error as Error).message);
-            getErrorMessage(message);
-        }
-
-        runSwap(transaction, signer); //스왑 호출
+        // try {
+        //     const swap = getPrice(
+        //         firstAmount,
+        //         1, //slippageAmount
+        //         Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+        //         signerAddress
+        //     ).then(data => {
+        //         setTransaction(data[0]);
+        //     })
+        //
+        //     console.log(transaction);
+        // } catch (error) {
+        //     let message;
+        //     if (error instanceof Error) message = error.message;
+        //     else message = String((error as Error).message);
+        //     getErrorMessage(message);
+        // }
+        //
+        // runSwap(transaction, signer); //스왑 호출
 
         setFirstAmount("");
         setSecondAmount("");
