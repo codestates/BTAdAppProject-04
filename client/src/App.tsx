@@ -14,6 +14,7 @@ import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
 import {utils} from "./components/ethersTest/utils"
 import Web3 from 'web3';
+import Pool from "./pages/Pool";
 declare let window: any;
 
 function App(): JSX.Element {
@@ -135,12 +136,19 @@ function App(): JSX.Element {
           setMadeTx={setMadeTx}
         />
       )}
+
+      {pathName === "/pool" && (
+          <Pool
+              setLoginModalOpen={setIsLoginModalOpen}
+          />
+      )}
+
       {/*화면사이즈 줄어들 때 스왑/트랜잭션 버튼 생성*/}
-      {/*{!isDesktop && (*/}
-      {/*  <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">*/}
-      {/*    <NavTabSwitcher />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {!isDesktop && (
+        <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">
+          <NavTabSwitcher />
+        </div>
+      )}
     </div>
   );
 }
