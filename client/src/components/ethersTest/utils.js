@@ -7,4 +7,7 @@ export const utils = {
         const CMTContract = new ethers.Contract(process.env.REACT_APP_CMT_ADDRESS, CMT.abi, signer)
         return ethers.utils.formatEther(await CMTContract.balanceOf(signer.getAddress()))
     },
+    getETHBalance: async (signer) => {
+        return ethers.utils.formatEther(await signer.getBalance())
+    },
 }

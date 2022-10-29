@@ -74,6 +74,7 @@ function App(): JSX.Element {
     const signer = provider.getSigner();
     // console.log(ethers.utils.formatEther(await signer.getBalance()))
     console.log(await utils.getCMTBalance(signer));
+    console.log(await utils.getETHBalance(signer))
     };
 
   React.useEffect(() => {
