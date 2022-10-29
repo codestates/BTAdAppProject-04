@@ -19,7 +19,7 @@ const WETH_ADDRESS = process.env.REACT_APP_WETH_ADDRESS;
 const CMT_Name = "CodeMonkeyToken";
 const CMT_Symbol = "CMT";
 const CMT_ADDRESS = process.env.REACT_APP_CMT_ADDRESS;
-console.log(WETH_ADDRESS,CMT_ADDRESS)
+
 
 const WETH = new Token(chainId, WETH_ADDRESS, 18, WETH_Symbol, WETH_Name);
 const CMT = new Token(chainId, CMT_ADDRESS, 18, CMT_Symbol, CMT_Name);
@@ -57,5 +57,22 @@ export const utils = {
         const quoteAmountOut = route.quote.toFixed(6);
         const ratio = (inputAmount / quoteAmountOut).toFixed(3);
         return [transaction, quoteAmountOut, ratio];
+    },
+    runSwap: async (transaction, signer, inputAmount) =>{
+        const approvalAmount = ethers.utils.parseUnits("10", 18).toString();
+        const contract0 = WethContract();
+        const allowance = await contract0.allowance(
+            await signer.getAddress(),
+            V3_SWAP_ROUTER_ADDRESS
+        );
+        if (allowance < inputAmount * 10 ** 18) {  // 허가되지 않았다면 먼저 허가를 받음
+            let tx = await contract0
+                .connect(signer)
+                .approve(V3_SWAP_ROUTER_ADDRESS, approvalAmount);
+            await tx.wait();
+        }
+        let tx = await signer.sendTransaction(transaction);
+        await tx.wait();
+        return tx
     }
 }

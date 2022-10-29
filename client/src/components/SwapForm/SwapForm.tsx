@@ -12,7 +12,7 @@ import {useTranslation} from "react-i18next";
 import SwitchContext from "../../context/switch-context";
 import SwitchButton from "./SwitchButton";
 import { ethers } from 'ethers';
-// import { getPrice, runSwap } from '../../AlphaRouterService'
+import { utils } from '../utils/utils'
 
 declare let window: any;
 
@@ -71,25 +71,26 @@ const SwapForm = ({
       
     const makeSwap = async () => {
 
-        // try {
-        //     const swap = getPrice(
-        //         firstAmount,
-        //         1, //slippageAmount
-        //         Math.floor(Date.now()/1000 + (5 * 60)), //deadline
-        //         signerAddress
-        //     ).then(data => {
-        //         setTransaction(data[0]);
-        //     })
-        //
-        //     console.log(transaction);
-        // } catch (error) {
-        //     let message;
-        //     if (error instanceof Error) message = error.message;
-        //     else message = String((error as Error).message);
-        //     getErrorMessage(message);
-        // }
-        //
-        // runSwap(transaction, signer); //스왑 호출
+        try {
+            await utils.getPrice(      // 이부분은 금액을 적을때마다 실행하는것으로 바꿔야함
+                firstAmount,
+                1, //slippageAmount
+                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+                signerAddress
+            ).then(data => {
+                setTransaction(data[0]);
+                console.log("here",transaction);
+            })
+
+
+        } catch (error) {
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String((error as Error).message);
+            getErrorMessage(message);
+        }
+
+        await utils.runSwap(transaction, signer,firstAmount); //스왑 호출
 
         setFirstAmount("");
         setSecondAmount("");
