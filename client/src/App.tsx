@@ -12,7 +12,7 @@ import { useLocation } from "react-router-dom";
 import Transactions from "./pages/Transactions";
 import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
-
+import {utils} from "./components/utils/utils"
 import { ethers } from 'ethers';
 import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 
@@ -55,6 +55,9 @@ function App(): JSX.Element {
     setProvider(provider);
     const signer = provider.getSigner();
     setSigner(signer);
+
+    // console.log(await utils.getCMTBalance(signer)); // 토큰 확인 테스트
+    // console.log(await utils.getETHBalance(signer)); // 이더 확인 테스트
     
     //const wethContract = getWethContract();            
     //setWethContract(wethContract);
