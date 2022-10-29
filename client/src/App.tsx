@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect} from "react";
 import "./App.css";
 import Swap from "./pages/Swap";
 import NavBar from "./components/NavBar/NavBar";
 import ThemeContext from "./context/theme-context";
 import { useMoralis, useChain, useOneInchTokens } from "react-moralis";
 import { TokenList } from "./types";
+import {ethers} from "ethers";
 import ChainContext from "./context/chain-context";
 import SwapResultModal from "./components/SwapForm/SwapResultModal";
 import { useLocation } from "react-router-dom";
@@ -32,14 +33,17 @@ function App(): JSX.Element {
   const pathName = location.pathname;
   const [isLogin, setIsLogin] = React.useState(false);
 
+
   const closeModal = () => {
     setShowTransactionModal(false);
     setTxHash("");
     setErrorMessage("");
   };
 
+
   const [web3, setWeb3] = React.useState(Object);
   const [account, setAccount] = React.useState('');
+
 
   React.useEffect(() => {
     getAccount(); // 계정 설정
@@ -59,7 +63,7 @@ function App(): JSX.Element {
                     if (result[0] !== undefined) {
                         setAccount(result[0]);
                         setWeb3(web3);
-                      
+
                     }
                 }
             });
