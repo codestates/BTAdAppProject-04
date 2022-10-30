@@ -26,6 +26,13 @@ const TokenSelectModal = ({
   const [searchedValue, setSearchedValue] = React.useState("");
   const [customTokenList, setCustomTokenList] = React.useState<TokenDetails[]>(tokenList);
 
+  /* React.useEffect(() => {
+    
+    const filteredList = tokenList.map((token) =>
+    
+    
+  }, []); */
+  
   React.useEffect(() => {
     if (searchedValue.slice(0, 2).includes("0x")) {
       const filteredList = tokenList.filter((token) =>

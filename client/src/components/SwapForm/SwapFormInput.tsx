@@ -15,6 +15,8 @@ type SwapFormInputProps = {
   value: number | undefined | string;
   changeValue(val: number | undefined | string): void;
   changeCounterValue(val: number | undefined | string): void;
+  loading: boolean;
+  balance: number | undefined | string;
 };
 
 const SwapFormInput = ({
@@ -26,10 +28,15 @@ const SwapFormInput = ({
   getQuote,
   changeValue,
   changeCounterValue,
+  loading,
+  balance,
+
 }: SwapFormInputProps): JSX.Element => {
   const [isSelecting, setIsSelecting] = React.useState(false);
   const { t } = useTranslation();
   const [inputValue, setInputValue] = React.useState<number | undefined | string>();
+  const [tokenbalance, setTokenBalance] = React.useState<number | undefined | string>();
+
   React.useEffect(() => {
     if (value === 0 || value === "") {
       setInputValue("");
@@ -37,6 +44,10 @@ const SwapFormInput = ({
     }
     setInputValue(value);
   }, [value, setInputValue, changeCounterValue]);
+
+  React.useEffect(() => {
+    setTokenBalance(balance);
+  }, []);
 
   return (
     <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex items-center p-5">
@@ -72,7 +83,9 @@ const SwapFormInput = ({
             isSelecting={setIsSelecting}
           />
         )}
+       
       </div>
+      
     </div>
   );
 };

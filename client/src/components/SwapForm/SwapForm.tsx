@@ -13,10 +13,22 @@ import SwitchContext from "../../context/switch-context";
 import SwitchButton from "./SwitchButton";
 import { ethers } from 'ethers';
 import { utils } from '../utils/utils'
+import { Circles } from "react-loader-spinner";
 
 declare let window: any;
 
 type SwapFormProps = {
+    tokenList: TokenList;
+    isLogin: boolean;
+    setIsLogin(val: boolean): void;
+    setLoginModalOpen(val: boolean): void;
+    openTransactionModal(val: boolean): void;
+    getTxHash(hash: string): void;
+    getErrorMessage(message: string): void;
+    setMadeTx(val: boolean): void;
+};
+
+type data = {
     tokenList: TokenList;
     isLogin: boolean;
     setIsLogin(val: boolean): void;
@@ -43,16 +55,19 @@ const SwapForm = ({
     const {t} = useTranslation();
     const [firstToken, setFirstToken] = useState<SelectedToken>({decimals: 0});
     const [secondToken, setSecondToken] = useState<SelectedToken>({decimals: 0});
-    const [firstAmount, setFirstAmount] = useState<number | undefined | string>();
-    const [secondAmount, setSecondAmount] = useState<number | undefined | string>();
+    const [firstAmount, setFirstAmount] = useState<any>();
+    const [secondAmount, setSecondAmount] = useState<any>();
     const [gas, setGas] = useState<number | undefined | string>();
 
     const [provider, setProvider] = useState<any>();
     const [signer, setSigner] = useState<any>();
     const [signerAddress, setSignerAddress] = useState("");
-    const [ratio, setRatio] = useState<number | undefined | string>();
-    const [transaction, setTransaction] = useState({});
-
+    const [ratio, setRatio] = useState<any>();
+    const [transaction, setTransaction] = useState<any>();
+    const [loading, setLoading] = useState(false);
+    const [firstBalance, setFirstBalance] = useState<any>();
+    const [secondBalance, setSecondBalance] = useState<any>();
+    
     useEffect(() => {
         onLoad();
     }, []);
@@ -67,34 +82,26 @@ const SwapForm = ({
         .then(address => {
             setSignerAddress(address);
         })
-    };
+
+        const wethBalace = await utils.getETHBalance(signer)
+        setFirstBalance(wethBalace);
+        console.log(wethBalace)
+        const cmtBalace = await utils.getCMTBalance(signer)
+        setSecondBalance(wethBalace);
+        console.log(cmtBalace)
+    };  
       
     const makeSwap = async () => {
 
-        try {
-            await utils.getPrice(      // 이부분은 금액을 적을때마다 실행하는것으로 바꿔야함
-                firstAmount,
-                1, //slippageAmount
-                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
-                signerAddress
-            ).then(data => {
-                setTransaction(data[0]);
-                console.log("here",transaction);
-            })
+        const txHash = await utils.runSwap(transaction, signer, firstAmount); //스왑 호출
 
-
-        } catch (error) {
-            let message;
-            if (error instanceof Error) message = error.message;
-            else message = String((error as Error).message);
-            getErrorMessage(message);
-        }
-
-        await utils.runSwap(transaction, signer,firstAmount); //스왑 호출
+        openTransactionModal(true);
+        getTxHash(txHash);
+        setMadeTx(true);
 
         setFirstAmount("");
         setSecondAmount("");
-        setGas("");
+        setRatio("");
         /* const amount = Number(Number(firstAmount) * 10 ** firstToken.decimals);
         const address = await Moralis.User.current()?.get("ethAddress");
         openTransactionModal(true);
@@ -119,7 +126,30 @@ const SwapForm = ({
     };
 
     const getQuoteFirst = async (val: string) => {
-        const amount = Number(Number(val) * 10 ** firstToken.decimals);
+        setLoading(true);
+        setFirstAmount(val);
+        try {
+            await utils.getPrice(      
+                    firstAmount,
+                    10, //slippageAmount
+                    Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+                    signerAddress
+                ).then(data => {
+                    setTransaction(data[0]);
+                    setSecondAmount(data[1]);
+                    setRatio(data[2]);
+                    setLoading(false);
+                    console.log("here",transaction);
+                })
+        } catch (error) {
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String((error as Error).message);
+            getErrorMessage(message);
+            setLoading(false);
+        } 
+
+        /* const amount = Number(Number(val) * 10 ** firstToken.decimals);
         setFirstAmount(val);
         if (amount === 0 || amount === undefined) {
             setFirstAmount("");
@@ -139,11 +169,27 @@ const SwapForm = ({
             });
             setSecondAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
             setGas(quote.estimatedGas);
-        }
+        } */
     };
 
     const getQuoteSecond = async (val: string) => {
-        const amount = Number(Number(val) * 10 ** secondToken.decimals);
+        setLoading(true);
+        setSecondAmount(val);
+
+        await utils.getPrice(      
+            secondAmount,
+            10, //slippageAmount
+            Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+            signerAddress
+        ).then(data => {
+            setTransaction(data[0]);
+            setSecondAmount(data[1]);
+            setRatio(data[2]);
+            setLoading(false);
+            console.log("here",transaction);
+        })
+
+        /* const amount = Number(Number(val) * 10 ** secondToken.decimals);
         setSecondAmount(val);
         if (amount === 0 || amount === undefined) {
             setFirstAmount("");
@@ -163,7 +209,7 @@ const SwapForm = ({
             });
             setFirstAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
             setGas(quote.estimatedGas);
-        }
+        } */
     };
 
     return (
@@ -182,19 +228,29 @@ const SwapForm = ({
                                 value={firstAmount}
                                 changeValue={setFirstAmount}
                                 changeCounterValue={setSecondAmount}
+                                loading={loading}
+                                balance={firstBalance}
                             />
                             <div className={"flex justify-center items-center "}>
                             <SwitchButton></SwitchButton>
                             </div>
-                            <SwapFormInput
-                                tokenList={tokenList}
-                                choose={setSecondToken}
-                                selected={secondToken}
-                                getQuote={getQuoteSecond}
-                                value={secondAmount}
-                                changeValue={setFirstAmount}
-                                changeCounterValue={setFirstAmount}
-                            />
+                            {loading ? (
+                                <div className="h-[60%] flex justify-center items-center">
+                                    <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"} />
+                                </div>
+                                ) : (
+                                <SwapFormInput
+                                    tokenList={tokenList}
+                                    choose={setSecondToken}
+                                    selected={secondToken}
+                                    getQuote={getQuoteSecond}
+                                    value={secondAmount}
+                                    changeValue={setFirstAmount}
+                                    changeCounterValue={setFirstAmount}
+                                    loading={loading}
+                                    balance={secondBalance}
+                                />
+                            )}
                         </div>
                 :
                     <div>
@@ -206,32 +262,50 @@ const SwapForm = ({
                             value={secondAmount}
                             changeValue={setFirstAmount}
                             changeCounterValue={setFirstAmount}
+                            loading={loading}
+                            balance={firstBalance}
                         />
                         <div className={"flex justify-center items-center "}>
                             <SwitchButton></SwitchButton>
                         </div>
-                        <SwapFormInput
-                            initial={true}
-                            tokenList={tokenList}
-                            choose={setFirstToken}
-                            selected={firstToken}
-                            getQuote={getQuoteFirst}
-                            value={firstAmount}
-                            changeValue={setFirstAmount}
-                            changeCounterValue={setSecondAmount}
-                        />
+                        {loading ? (
+                            <div className="h-[60%] flex justify-center items-center">
+                                <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"} />
+                            </div>
+                            ) : (
+                            <SwapFormInput
+                                initial={true}
+                                tokenList={tokenList}
+                                choose={setFirstToken}
+                                selected={firstToken}
+                                getQuote={getQuoteFirst}
+                                value={firstAmount}
+                                changeValue={setFirstAmount}
+                                changeCounterValue={setSecondAmount}
+                                loading={loading}
+                                balance={secondBalance}
+                            />
+                        )}
                     </div>
                 }
                         
-
-                {gas && (
+                {ratio && (
+                    <>
+                        <div className="w-full h-3 flex items-center justify-center py-4">
+                        <div className="w-[95%] h-full flex items-center justify-end text-sm text-white font-semibold">
+                            {`1 CMT = ${ratio} ETH`}
+                            </div>
+                        </div>
+                    </>
+                )}
+                {/* {gas && (
                     <div className="w-full h-3 flex items-center justify-center py-4">
                         <div className="w-[95%] h-full flex items-center justify-end text-sm text-white font-semibold">
                             {t("swap_form.estimated")}
                             {gas}
                         </div>
                     </div>
-                )}
+                )} */}
                 <SwapButton setLoginModalOpen={setLoginModalOpen} isLogin={isLogin} setIsLogin={setIsLogin} trySwap={makeSwap}/>
             </div>
         </form>

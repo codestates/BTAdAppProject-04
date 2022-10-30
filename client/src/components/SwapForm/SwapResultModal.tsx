@@ -20,12 +20,10 @@ const SwapResultModal = ({
   const { t } = useTranslation();
   const { isLight } = React.useContext(ThemeContext);
   const { chain } = React.useContext(ChainContext);
-  const [href, setHref] = React.useState("https://etherscan.io/tx/");
+  const [href, setHref] = React.useState("https://goerli.etherscan.io/txs/");
 
   React.useEffect(() => {
-    if (chain === "eth") setHref("https://etherscan.io/tx/");
-    if (chain === "bsc") setHref("https://bscscan.com/tx");
-    if (chain === "polygon") setHref("https://polygonscan.com/tx/");
+    if (chain === "eth") setHref("https://goerli.etherscan.io/txs/");
   }, [chain]);
 
   return (
