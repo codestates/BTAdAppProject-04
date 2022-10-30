@@ -14,6 +14,8 @@ import SwitchButton from "./SwitchButton";
 import {ethers} from 'ethers';
 import {utils} from '../utils/utils'
 import {Circles} from "react-loader-spinner";
+import cmt from "../../assets/images/cmt.png";
+import weth from "../../assets/images/weth.png";
 
 declare let window: any;
 
@@ -53,6 +55,7 @@ const SwapForm = ({
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);
     const {t} = useTranslation();
+
     const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:"",address:process.env.REACT_APP_WETH_ADDRESS,decimals: 0,symbol:"WETH"});
     const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:"",address:process.env.REACT_APP_CMT_ADDRESS,decimals: 0,symbol:"CMT"});
     const [firstAmount, setFirstAmount] = useState<any>();
@@ -107,6 +110,7 @@ const SwapForm = ({
         const secondBalace = await utils.getTokenBalance(signer, secondToken.address);
         setSecondBalance(secondBalace);
         console.log(secondBalace)
+
     };
 
     useEffect(() => {
@@ -218,6 +222,7 @@ const SwapForm = ({
                                 </div>
                             ) : (
                                 <SwapFormInput
+                                    initial={true}
                                     tokenList={tokenList}
                                     choose={setSecondToken}
                                     selected={secondToken}
@@ -233,6 +238,7 @@ const SwapForm = ({
                         :
                         <div>
                             <SwapFormInput
+                                initial={true}
                                 tokenList={tokenList}
                                 choose={setSecondToken}
                                 selected={secondToken}

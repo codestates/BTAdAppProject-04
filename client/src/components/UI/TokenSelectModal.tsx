@@ -7,6 +7,8 @@ import ThemeContext from "../../context/theme-context";
 import type { SelectedToken,} from "../../types";
 import { DebounceInput } from "react-debounce-input";
 import { INSPECT_MAX_BYTES } from "buffer";
+import cmt from "../../assets/images/cmt.png";
+import weth from "../../assets/images/weth.png";
 
 type TokenSelectModalProps = {
   initial?: boolean;

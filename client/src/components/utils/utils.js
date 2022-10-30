@@ -35,6 +35,8 @@ const BCT = new Token(chainId, BCT_ADDRESS, 18, BCT_Symbol, BCT_Name);
 const YRT = new Token(chainId, YRT_ADDRESS, 18, YRT_Symbol, YRT_Name);
 
 
+
+
 // const WethContract = () => new ethers.Contract(WETH_ADDRESS, ABI, web3Provider);
 // const CMTContract = () => new ethers.Contract(CMT_ADDRESS, ABI, web3Provider);
 // const BCTContract = () => new ethers.Contract(BCT_ADDRESS, ABI, web3Provider);
@@ -78,9 +80,10 @@ export const utils = {
         const ratio = (inputAmount / quoteAmountOut).toFixed(3);
         return [transaction, quoteAmountOut, ratio];
     },
-    runSwap: async (transaction, signer, inputAmount) =>{
+    runSwap: async (transaction, signer, contractAddress,inputAmount) =>{
+        const Contract = () => new ethers.Contract(contractAddress, ABI, web3Provider);
         const approvalAmount = ethers.utils.parseUnits("10", 18).toString();
-        const contract0 = WethContract();
+        const contract0 = Contract();
         const allowance = await contract0.allowance(
             await signer.getAddress(),
             V3_SWAP_ROUTER_ADDRESS
