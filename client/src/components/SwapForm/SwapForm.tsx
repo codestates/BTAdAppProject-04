@@ -94,12 +94,19 @@ const SwapForm = ({
     };
 
     const makeSwap = async () => {
-        const txHash = await utils.runSwap(transaction, signer, firstAmount); //스왑 호출
-
-        openTransactionModal(true);
-        getTxHash(txHash);
-        setMadeTx(true);
-
+        if(isSwitch){
+            const txHash = await utils.runSwap(transaction, signer, firstToken.address,firstAmount); //스왑 호출
+            openTransactionModal(true);
+            getTxHash(txHash.hash);
+            setMadeTx(true);
+            console.log(txHash)
+        }else{
+            const txHash = await utils.runSwap(transaction, signer, secondToken.address,firstAmount); //스왑 호출
+            openTransactionModal(true);
+            getTxHash(txHash.hash);
+            setMadeTx(true);
+            console.log(txHash)
+        }
         setFirstAmount("");
         setSecondAmount("");
         setRatio("");
