@@ -66,7 +66,7 @@ const SwapResultModal = ({
             </a>
           </div>
         )}
-        {errorMessage !== "" && (
+        {/* {errorMessage !== "" && (
           <div className="h-[60%] flex justify-center items-center">
             <div
               className={isLight ? styles.lightHeadingsError : styles.darkHeadingsError}
@@ -74,7 +74,7 @@ const SwapResultModal = ({
               {errorMessage}
             </div>
           </div>
-        )}
+        )} */}
         <div className="h-[25%] w-[100%] flex items-center justify-center pb-2">
           <button
             className={isLight ? styles.lightButton : styles.darkButton}

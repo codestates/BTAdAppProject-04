@@ -83,7 +83,7 @@ const SwapForm = ({
             setSignerAddress(address);
         })
 
-        const wethBalace = await utils.getETHBalance(signer)
+        const wethBalace = await utils.getWETHBalance(signer)
         setFirstBalance(wethBalace);
         console.log(wethBalace)
         const cmtBalace = await utils.getCMTBalance(signer)

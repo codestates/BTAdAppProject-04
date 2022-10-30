@@ -36,6 +36,10 @@ export const utils = {
     getETHBalance: async (signer) => {
         return ethers.utils.formatEther(await signer.getBalance())
     },
+    getWETHBalance: async (signer) => {
+        const WETHContract = new ethers.Contract(WETH_ADDRESS, ABI, signer)
+        return ethers.utils.formatEther(await WETHContract.balanceOf(signer.getAddress()))
+    },
     getPrice: async (inputAmount, slippageAmount, deadline, walletAddress) => {
         const percentSlippage = new Percent(slippageAmount, 100);
         const wei = ethers.utils.parseUnits(inputAmount.toString(), 18);
