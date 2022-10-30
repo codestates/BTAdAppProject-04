@@ -78,7 +78,7 @@ const NavBar = ({ isLogin, setIsLogin, loginModalOpen, setLoginModalOpen }: NavB
               .getBalance(address); // 이더 잔액을 가져옴
          
           let ethBalance = Number(web3.utils.fromWei(balance, "ether"));
-          setAccBalance(ethBalance.toFixed(4));
+          setAccBalance(ethBalance.toFixed(3));
       }
   };
 

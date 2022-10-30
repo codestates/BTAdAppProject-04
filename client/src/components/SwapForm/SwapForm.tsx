@@ -87,7 +87,7 @@ const SwapForm = ({
         setFirstBalance(wethBalace);
         console.log(wethBalace)
         const cmtBalace = await utils.getCMTBalance(signer)
-        setSecondBalance(wethBalace);
+        setSecondBalance(cmtBalace);
         console.log(cmtBalace)
     };  
       
@@ -175,20 +175,26 @@ const SwapForm = ({
     const getQuoteSecond = async (val: string) => {
         setLoading(true);
         setSecondAmount(val);
-
-        await utils.getPrice(      
-            secondAmount,
-            10, //slippageAmount
-            Math.floor(Date.now()/1000 + (5 * 60)), //deadline
-            signerAddress
-        ).then(data => {
-            setTransaction(data[0]);
-            setSecondAmount(data[1]);
-            setRatio(data[2]);
+        try {
+            await utils.getPrice(      
+                secondAmount,
+                10, //slippageAmount
+                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+                signerAddress
+            ).then(data => {
+                setTransaction(data[0]);
+                setSecondAmount(data[1]);
+                setRatio(data[2]);
+                setLoading(false);
+                console.log("here",transaction);
+            })
+        } catch (error) {
+            let message;
+            if (error instanceof Error) message = error.message;
+            else message = String((error as Error).message);
+            getErrorMessage(message);
             setLoading(false);
-            console.log("here",transaction);
-        })
-
+        } 
         /* const amount = Number(Number(val) * 10 ** secondToken.decimals);
         setSecondAmount(val);
         if (amount === 0 || amount === undefined) {
