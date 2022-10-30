@@ -120,12 +120,14 @@ const SwapForm = ({
     const getQuoteFirst = async (val: string) => {
         setLoading(true);
         setFirstAmount(val);
+        console.log(val);
+
         try {
             await utils.getPrice(
                 firstToken.symbol,
                 secondToken.symbol
                 ,
-                firstAmount,
+                val,
                 10, //slippageAmount
                 Math.floor(Date.now() / 1000 + (5 * 60)), //deadline
                 signerAddress
@@ -149,11 +151,12 @@ const SwapForm = ({
     const getQuoteSecond = async (val: string) => {
         setLoading(true);
         setSecondAmount(val);
+        console.log(val);
         try {
             await utils.getPrice(
                 secondToken.symbol
                 , firstToken.symbol,
-                secondAmount,
+                val,
                 10, //slippageAmount
                 Math.floor(Date.now() / 1000 + (5 * 60)), //deadline
                 signerAddress

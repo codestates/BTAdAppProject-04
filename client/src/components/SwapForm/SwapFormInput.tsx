@@ -43,6 +43,10 @@ const SwapFormInput = ({
       changeCounterValue("");
     }
     setInputValue(value);
+    
+    console.log(value);
+    console.log(inputValue);
+
   }, [value, setInputValue, changeCounterValue]);
 
   React.useEffect(() => {
@@ -60,8 +64,10 @@ const SwapFormInput = ({
                   className="min-w-0 h-full rounded-2xl bg-gray-100 text-3xl font-medium font-inc focus:outline-none px-1"
                   placeholder={t("swap_form.placeholder")}
                   type="number"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
-                    value={inputValue}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
+                  value={inputValue}
+                  debounceTimeout={300}
+                  minLength={2}
               />
               :
               <DebounceInput
@@ -70,6 +76,8 @@ const SwapFormInput = ({
                   type="number"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
                   value={''}
+                  debounceTimeout={300}
+                  minLength={2}
               />
         }
         <div>
