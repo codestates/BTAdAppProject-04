@@ -92,7 +92,6 @@ const SwapForm = ({
     };  
       
     const makeSwap = async () => {
-
         const txHash = await utils.runSwap(transaction, signer, firstAmount); //스왑 호출
 
         openTransactionModal(true);
@@ -102,6 +101,14 @@ const SwapForm = ({
         setFirstAmount("");
         setSecondAmount("");
         setRatio("");
+
+        const wethBalace = await utils.getWETHBalance(signer)
+        setFirstBalance(wethBalace);
+        console.log(wethBalace)
+        const cmtBalace = await utils.getCMTBalance(signer)
+        setSecondBalance(cmtBalace);
+        console.log(cmtBalace)
+
         /* const amount = Number(Number(firstAmount) * 10 ** firstToken.decimals);
         const address = await Moralis.User.current()?.get("ethAddress");
         openTransactionModal(true);
