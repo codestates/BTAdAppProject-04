@@ -46,10 +46,10 @@ const SwapFormInput = ({
   }, [value, setInputValue, changeCounterValue]);
 
   React.useEffect(() => {
-    setTokenBalance(Number(balance).toFixed(4));
+    setTokenBalance(Number(balance).toFixed(3));
   }, []);
   React.useEffect(() => {
-    setTokenBalance(Number(balance).toFixed(4));
+    setTokenBalance(Number(balance).toFixed(3));
   }, [balance]);
 
   return (

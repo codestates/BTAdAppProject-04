@@ -4,8 +4,9 @@ import { XIcon } from "@heroicons/react/solid";
 import TokenListItem from "./TokenListItem";
 import { TokenDetails, TokenList } from "../../types";
 import ThemeContext from "../../context/theme-context";
-import type { SelectedToken } from "../../types";
+import type { SelectedToken,} from "../../types";
 import { DebounceInput } from "react-debounce-input";
+import { INSPECT_MAX_BYTES } from "buffer";
 
 type TokenSelectModalProps = {
   initial?: boolean;
@@ -26,23 +27,27 @@ const TokenSelectModal = ({
   const [searchedValue, setSearchedValue] = React.useState("");
   const [customTokenList, setCustomTokenList] = React.useState<TokenDetails[]>(tokenList);
 
-  /* React.useEffect(() => {
-    
-    const filteredList = tokenList.map((token) =>
-    
-    
-  }, []); */
+  const arr = [{logoURI: '', name: 'CMT', symbol: 'CMT', tags: [],
+  address: '0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df', decimals: 18}];
+  arr.push({logoURI: '', name: 'WETH', symbol: 'WETH', tags: [],
+  address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', decimals: 18});
+
+  React.useEffect(() => {
+  
+    tokenList = arr;
+    setCustomTokenList(tokenList);
+  }, []);
   
   React.useEffect(() => {
     if (searchedValue.slice(0, 2).includes("0x")) {
-      const filteredList = tokenList.filter((token) =>
+      const filteredList = arr.filter((token) =>
         token.address.toLocaleLowerCase().includes(searchedValue.toLocaleLowerCase()),
       );
       setCustomTokenList(filteredList);
     }
 
     if (!searchedValue.slice(0, 2).includes("0x")) {
-      const filteredList = tokenList.filter((token) =>
+      const filteredList = arr.filter((token) =>
         token.symbol.includes(searchedValue.toUpperCase()),
       );
       setCustomTokenList(filteredList);
