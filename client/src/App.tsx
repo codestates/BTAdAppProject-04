@@ -12,8 +12,10 @@ import { useLocation } from "react-router-dom";
 import Transactions from "./pages/Transactions";
 import useWindowWidth from "./hooks/useWindowWidth";
 import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
-
+import {utils} from "./components/utils/utils"
 import { ethers } from 'ethers';
+// import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
+
 import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 import Pool from "./pages/Pool";
 import CreatePoolModal from "./components/UI/CreatePoolModal";
@@ -61,7 +63,15 @@ function App(): JSX.Element {
     const signer = provider.getSigner();
     setSigner(signer);
 
-    //const wethContract = getWethContract();
+    // console.log(await utils.getCMTBalance(signer)); // 토큰 확인 테스트
+    // console.log(await utils.getETHBalance(signer)); // 이더 확인 테스트
+    // console.log(await utils.getPrice(0.1, 2, Math.floor(Date.now() / 1000 + 10 * 60), await signer.getAddress())); // 변환 가격 확인 테스트
+    // let transaction = await utils.getPrice(0.001, 2, Math.floor(Date.now() / 1000 + 10 * 60),await signer.getAddress())
+    // console.log(await utils.runSwap(transaction[0], signer, 0.001)); // 스왑 확인 테스트
+
+
+
+    //const wethContract = getWethContract();            
     //setWethContract(wethContract);
     //const uniContract = getUniContract();
     //setUniContract(uniContract);
