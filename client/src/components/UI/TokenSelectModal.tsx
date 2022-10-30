@@ -9,6 +9,9 @@ import { DebounceInput } from "react-debounce-input";
 import { INSPECT_MAX_BYTES } from "buffer";
 import cmt from "../../assets/images/cmt.png";
 import weth from "../../assets/images/weth.png";
+import bct from "../../assets/images/bct.png";
+import yrt from "../../assets/images/yrt.png";
+
 
 type TokenSelectModalProps = {
   initial?: boolean;
@@ -29,13 +32,13 @@ const TokenSelectModal = ({
   const [searchedValue, setSearchedValue] = React.useState("");
   const [customTokenList, setCustomTokenList] = React.useState<TokenDetails[]>(tokenList);
 
-  const arr = [{logoURI: '', name: 'CodeMonkey Token', symbol: 'CMT', tags: [],
+  const arr = [{logoURI: cmt, name: 'CodeMonkey Token', symbol: 'CMT', tags: [],
   address: '0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df', decimals: 18}];
-  arr.push({logoURI: '', name: 'BlueChipToken', symbol: 'BCT', tags: [],
+  arr.push({logoURI: bct, name: 'BlueChipToken', symbol: 'BCT', tags: [],
   address: '0x8a928c5c8417A3481675C0CDa5eBDDcbA464ba93', decimals: 18});
-  arr.push({logoURI: '', name: 'YerinToken', symbol: 'YRT', tags: [],
+  arr.push({logoURI: yrt, name: 'YerinToken', symbol: 'YRT', tags: [],
   address: '0x8C7F591f92D654aF47fA1A98076966Ef2915003d', decimals: 18});
-  arr.push({logoURI: '', name: 'Wrapped Ether', symbol: 'WETH', tags: [],
+  arr.push({logoURI: weth, name: 'Wrapped Ether', symbol: 'WETH', tags: [],
   address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', decimals: 18});
 
   React.useEffect(() => {

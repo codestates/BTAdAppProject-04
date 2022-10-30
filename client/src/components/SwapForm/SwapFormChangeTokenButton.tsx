@@ -33,15 +33,15 @@ const SwapFormChangeTokenButton = ({
       onClick={() => select(true)}
     >
       {initial && !selected.name && chainCtx.chain === "eth" && (
-        <img src={ethLogo} alt="" className="h-6" />
+        <img alt="" className="h-6" />
       )}
       {initial && !selected.name && chainCtx.chain === "polygon" && (
-        <img src={maticLogo} alt="" className="h-6" />
+        <img alt="" className="h-6" />
       )}
       {initial && !selected.name && chainCtx.chain === "bsc" && (
-        <img src={bscLogo} alt="" className="h-6" />
+        <img alt="" className="h-6" />
       )}
-      {selected.name && <img src={selected.logo} alt="" className="h-6" />}
+      {selected.name && <img alt="" className="h-6" />}
       <span
         className={`flex items-center ${select.name} ${
           initial
