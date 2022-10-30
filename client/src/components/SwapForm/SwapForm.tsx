@@ -14,6 +14,8 @@ import SwitchButton from "./SwitchButton";
 import {ethers} from 'ethers';
 import {utils} from '../utils/utils'
 import {Circles} from "react-loader-spinner";
+import cmt from "../../assets/images/cmt.png";
+import weth from "../../assets/images/weth.png";
 
 declare let window: any;
 
@@ -53,8 +55,8 @@ const SwapForm = ({
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);
     const {t} = useTranslation();
-    const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:"",address:"",decimals: 0,symbol:"WETH"});
-    const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:"",address:"",decimals: 0,symbol:"CMT"});
+    const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:weth,address:"",decimals: 0,symbol:"WETH"});
+    const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:cmt,address:"",decimals: 0,symbol:"CMT"});
     const [firstAmount, setFirstAmount] = useState<any>();
     const [secondAmount, setSecondAmount] = useState<any>();
     const [gas, setGas] = useState<number | undefined | string>();
@@ -84,10 +86,10 @@ const SwapForm = ({
                 setSignerAddress(address);
             })
 
-        const wethBalace = await utils.getWETHBalance(signer)
+        const wethBalace = await utils.getTokenBalance(signer, "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6")
         setFirstBalance(wethBalace);
         console.log(wethBalace)
-        const cmtBalace = await utils.getCMTBalance(signer)
+        const cmtBalace = await utils.getTokenBalance(signer, "0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df")
         setSecondBalance(cmtBalace);
         console.log(cmtBalace)
     };
@@ -103,10 +105,10 @@ const SwapForm = ({
         setSecondAmount("");
         setRatio("");
 
-        const wethBalace = await utils.getWETHBalance(signer)
+        const wethBalace = await utils.getTokenBalance(signer, "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6")
         setFirstBalance(wethBalace);
         console.log(wethBalace)
-        const cmtBalace = await utils.getCMTBalance(signer)
+        const cmtBalace = await utils.getTokenBalance(signer, "0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df")
         setSecondBalance(cmtBalace);
         console.log(cmtBalace)
 
@@ -259,6 +261,7 @@ const SwapForm = ({
                                 </div>
                             ) : (
                                 <SwapFormInput
+                                    initial={true}
                                     tokenList={tokenList}
                                     choose={setSecondToken}
                                     selected={secondToken}
@@ -274,6 +277,7 @@ const SwapForm = ({
                         :
                         <div>
                             <SwapFormInput
+                                initial={true}
                                 tokenList={tokenList}
                                 choose={setSecondToken}
                                 selected={secondToken}

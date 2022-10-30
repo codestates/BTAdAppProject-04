@@ -7,6 +7,8 @@ import ThemeContext from "../../context/theme-context";
 import type { SelectedToken,} from "../../types";
 import { DebounceInput } from "react-debounce-input";
 import { INSPECT_MAX_BYTES } from "buffer";
+import cmt from "../../assets/images/cmt.png";
+import weth from "../../assets/images/weth.png";
 
 type TokenSelectModalProps = {
   initial?: boolean;
@@ -27,9 +29,9 @@ const TokenSelectModal = ({
   const [searchedValue, setSearchedValue] = React.useState("");
   const [customTokenList, setCustomTokenList] = React.useState<TokenDetails[]>(tokenList);
 
-  const arr = [{logoURI: '', name: 'CMT', symbol: 'CMT', tags: [],
+  const arr = [{logoURI: cmt, name: 'CMT', symbol: 'CMT', tags: [],
   address: '0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df', decimals: 18}];
-  arr.push({logoURI: '', name: 'WETH', symbol: 'WETH', tags: [],
+  arr.push({logoURI: weth, name: 'WETH', symbol: 'WETH', tags: [],
   address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', decimals: 18});
 
   React.useEffect(() => {

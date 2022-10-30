@@ -54,7 +54,6 @@ const SwapFormInput = ({
 
   return (
     <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex justify-center items-center p-5">
-      <div className="flex items-center w-full ">
         {
           inputValue ?
               <DebounceInput
@@ -74,6 +73,7 @@ const SwapFormInput = ({
               />
         }
         <div>
+          <div className={"flex justify-end"}>
         <SwapFormChangeTokenButton
           initial={initial}
           select={setIsSelecting}
@@ -88,13 +88,13 @@ const SwapFormInput = ({
             isSelecting={setIsSelecting}
           />
         )}
-
-          <div className={"whitespace-nowrap align-bottom font-normal text-right text-sm font-inc"}>Balance: {tokenbalance}</div>
+          </div>
+          <div className={"whitespace-nowrap align-bottom font-normal text-right text-sm font-inc"}>
+            Balance: {tokenbalance}
+          </div>
 
         </div>
 
-      </div>
-      
     </div>
   );
 };

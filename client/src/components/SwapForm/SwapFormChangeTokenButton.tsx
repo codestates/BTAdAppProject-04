@@ -22,10 +22,10 @@ const SwapFormChangeTokenButton = ({
   const { t } = useTranslation();
   const { isLight } = React.useContext(ThemeContext);
   const chainCtx = React.useContext(ChainContext);
-
+  console.log(selected.name);
   return (
     <div
-      className={`flex whitespace-nowrap ml-1 rounded-3xl p-2 cursor-pointer ${
+      className={`flex whitespace-nowrap rounded-3xl p-2  ${
         initial
           ? `${isLight ? styles.changeLight : styles.changeDark}`
           : `${isLight ? styles.changeLight : styles.changeDark}`
@@ -33,18 +33,18 @@ const SwapFormChangeTokenButton = ({
       onClick={() => select(true)}
     >
       {initial && !selected.name && chainCtx.chain === "eth" && (
-        <img src={ethLogo} alt="" className="h-6 w-6" />
+        <img src={ethLogo} alt="" className="h-6" />
       )}
       {initial && !selected.name && chainCtx.chain === "polygon" && (
-        <img src={maticLogo} alt="" className="h-6 w-6" />
+        <img src={maticLogo} alt="" className="h-6" />
       )}
       {initial && !selected.name && chainCtx.chain === "bsc" && (
-        <img src={bscLogo} alt="" className="h-6 w-6" />
+        <img src={bscLogo} alt="" className="h-6" />
       )}
-      {selected.name && <img src={selected.logo} alt="" className="h-6 w-6" />}
+      {selected.name && <img src={selected.logo} alt="" className="h-6" />}
       <span
-        className={`flex items-center ${select.name && "pr-2 ml-1"} ${
-          initial && "pr-2"
+        className={`flex items-center ${select.name} ${
+          initial
         } text-sm md:text-base`}
       >
         {selected.name && selected.symbol}
@@ -53,7 +53,7 @@ const SwapFormChangeTokenButton = ({
         {initial && chainCtx.chain === "polygon" && !selected.name && "MATIC"}
         {!initial && !selected.name && t("swap_form.select")}
         <ChevronDownIcon
-          className={`h-4 w-4 ${initial && "mr-2"} ${select.name && "mr-2"}`}
+          className={`h-4`}
         />
       </span>
     </div>
