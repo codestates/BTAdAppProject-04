@@ -28,6 +28,10 @@ const CMT = new Token(chainId, CMT_ADDRESS, 18, CMT_Symbol, CMT_Name);
 const WethContract = () => new ethers.Contract(WETH_ADDRESS, ABI, web3Provider);
 const CMTContract = () => new ethers.Contract(CMT_ADDRESS, ABI, web3Provider);
 
+let tokenMap = new Map();
+tokenMap.set("WETH",WETH)
+tokenMap.set("CMT",CMT)
+
 export const utils = {
     getCMTBalance: async (signer) => {  // signer 의 토큰 개수 리턴
         const CMTContract = new ethers.Contract(process.env.REACT_APP_CMT_ADDRESS, ABI, signer)
@@ -40,11 +44,12 @@ export const utils = {
         const WETHContract = new ethers.Contract(WETH_ADDRESS, ABI, signer)
         return ethers.utils.formatEther(await WETHContract.balanceOf(signer.getAddress()))
     },
-    getPrice: async (inputAmount, slippageAmount, deadline, walletAddress) => {
+    getPrice: async (inputToken,outputToken,inputAmount, slippageAmount, deadline, walletAddress) => {
+        console.log(inputToken,outputToken,inputAmount, slippageAmount, deadline, walletAddress)
         const percentSlippage = new Percent(slippageAmount, 100);
         const wei = ethers.utils.parseUnits(inputAmount.toString(), 18);
-        const currencyAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei));
-        const route = await router.route(currencyAmount, CMT, TradeType.EXACT_INPUT, {
+        const currencyAmount = CurrencyAmount.fromRawAmount(tokenMap.get(inputToken), JSBI.BigInt(wei));
+        const route = await router.route(currencyAmount, tokenMap.get(outputToken), TradeType.EXACT_INPUT, {
             recipient: walletAddress,
             slippageTolerance: percentSlippage,
             deadline: deadline,

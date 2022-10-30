@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext, useEffect } from 'react';
+import {useState, useContext, useEffect} from 'react';
 import SwapFormHeader from "./SwapFormHeader";
 import SwapFormInput from "./SwapFormInput";
 import SwapButton from "./SwapButton";
@@ -11,9 +11,9 @@ import Moralis from "moralis";
 import {useTranslation} from "react-i18next";
 import SwitchContext from "../../context/switch-context";
 import SwitchButton from "./SwitchButton";
-import { ethers } from 'ethers';
-import { utils } from '../utils/utils'
-import { Circles } from "react-loader-spinner";
+import {ethers} from 'ethers';
+import {utils} from '../utils/utils'
+import {Circles} from "react-loader-spinner";
 
 declare let window: any;
 
@@ -53,8 +53,8 @@ const SwapForm = ({
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);
     const {t} = useTranslation();
-    const [firstToken, setFirstToken] = useState<SelectedToken>({decimals: 0});
-    const [secondToken, setSecondToken] = useState<SelectedToken>({decimals: 0});
+    const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:"",address:"",decimals: 0,symbol:"WETH"});
+    const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:"",address:"",decimals: 0,symbol:"CMT"});
     const [firstAmount, setFirstAmount] = useState<any>();
     const [secondAmount, setSecondAmount] = useState<any>();
     const [gas, setGas] = useState<number | undefined | string>();
@@ -67,11 +67,12 @@ const SwapForm = ({
     const [loading, setLoading] = useState(false);
     const [firstBalance, setFirstBalance] = useState<any>();
     const [secondBalance, setSecondBalance] = useState<any>();
-    
+
+
     useEffect(() => {
         onLoad();
     }, []);
-        
+
     const onLoad = async () => {
         const provider = await new ethers.providers.Web3Provider(window.ethereum);
         setProvider(provider);
@@ -79,9 +80,9 @@ const SwapForm = ({
         setSigner(signer);
 
         signer.getAddress()
-        .then(address => {
-            setSignerAddress(address);
-        })
+            .then(address => {
+                setSignerAddress(address);
+            })
 
         const wethBalace = await utils.getWETHBalance(signer)
         setFirstBalance(wethBalace);
@@ -89,8 +90,8 @@ const SwapForm = ({
         const cmtBalace = await utils.getCMTBalance(signer)
         setSecondBalance(cmtBalace);
         console.log(cmtBalace)
-    };  
-      
+    };
+
     const makeSwap = async () => {
         const txHash = await utils.runSwap(transaction, signer, firstAmount); //스왑 호출
 
@@ -136,25 +137,28 @@ const SwapForm = ({
         setLoading(true);
         setFirstAmount(val);
         try {
-            await utils.getPrice(      
-                    firstAmount,
-                    10, //slippageAmount
-                    Math.floor(Date.now()/1000 + (5 * 60)), //deadline
-                    signerAddress
-                ).then(data => {
-                    setTransaction(data[0]);
-                    setSecondAmount(data[1]);
-                    setRatio(data[2]);
-                    setLoading(false);
-                    console.log("here",transaction);
-                })
+            await utils.getPrice(
+                firstToken.symbol,
+                secondToken.symbol
+                ,
+                firstAmount,
+                10, //slippageAmount
+                Math.floor(Date.now() / 1000 + (5 * 60)), //deadline
+                signerAddress
+            ).then(data => {
+                setTransaction(data[0]);
+                setSecondAmount(data[1]);
+                setRatio(data[2]);
+                setLoading(false);
+                console.log("here", transaction);
+            })
         } catch (error) {
             let message;
             if (error instanceof Error) message = error.message;
             else message = String((error as Error).message);
             getErrorMessage(message);
             setLoading(false);
-        } 
+        }
 
         /* const amount = Number(Number(val) * 10 ** firstToken.decimals);
         setFirstAmount(val);
@@ -183,17 +187,19 @@ const SwapForm = ({
         setLoading(true);
         setSecondAmount(val);
         try {
-            await utils.getPrice(      
+            await utils.getPrice(
+                secondToken.symbol
+                , firstToken.symbol,
                 secondAmount,
                 10, //slippageAmount
-                Math.floor(Date.now()/1000 + (5 * 60)), //deadline
+                Math.floor(Date.now() / 1000 + (5 * 60)), //deadline
                 signerAddress
             ).then(data => {
                 setTransaction(data[0]);
                 setSecondAmount(data[1]);
                 setRatio(data[2]);
                 setLoading(false);
-                console.log("here",transaction);
+                console.log("here", transaction);
             })
         } catch (error) {
             let message;
@@ -201,7 +207,7 @@ const SwapForm = ({
             else message = String((error as Error).message);
             getErrorMessage(message);
             setLoading(false);
-        } 
+        }
         /* const amount = Number(Number(val) * 10 ** secondToken.decimals);
         setSecondAmount(val);
         if (amount === 0 || amount === undefined) {
@@ -245,13 +251,13 @@ const SwapForm = ({
                                 balance={firstBalance}
                             />
                             <div className={"flex justify-center items-center "}>
-                            <SwitchButton></SwitchButton>
+                                <SwitchButton></SwitchButton>
                             </div>
                             {loading ? (
                                 <div className="h-[60%] flex justify-center items-center">
-                                    <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"} />
+                                    <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"}/>
                                 </div>
-                                ) : (
+                            ) : (
                                 <SwapFormInput
                                     tokenList={tokenList}
                                     choose={setSecondToken}
@@ -265,48 +271,49 @@ const SwapForm = ({
                                 />
                             )}
                         </div>
-                :
-                    <div>
-                        <SwapFormInput
-                            tokenList={tokenList}
-                            choose={setSecondToken}
-                            selected={secondToken}
-                            getQuote={getQuoteSecond}
-                            value={secondAmount}
-                            changeValue={setFirstAmount}
-                            changeCounterValue={setFirstAmount}
-                            loading={loading}
-                            balance={secondBalance}
-                        />
-                        <div className={"flex justify-center items-center "}>
-                            <SwitchButton></SwitchButton>
-                        </div>
-                        {loading ? (
-                            <div className="h-[60%] flex justify-center items-center">
-                                <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"} />
-                            </div>
-                            ) : (
+                        :
+                        <div>
                             <SwapFormInput
-                                initial={true}
                                 tokenList={tokenList}
-                                choose={setFirstToken}
-                                selected={firstToken}
-                                getQuote={getQuoteFirst}
-                                value={firstAmount}
+                                choose={setSecondToken}
+                                selected={secondToken}
+                                getQuote={getQuoteSecond}
+                                value={secondAmount}
                                 changeValue={setFirstAmount}
-                                changeCounterValue={setSecondAmount}
+                                changeCounterValue={setFirstAmount}
                                 loading={loading}
-                                balance={firstBalance}
+                                balance={secondBalance}
                             />
-                        )}
-                    </div>
+                            <div className={"flex justify-center items-center "}>
+                                <SwitchButton></SwitchButton>
+                            </div>
+                            {loading ? (
+                                <div className="h-[60%] flex justify-center items-center">
+                                    <Circles height={50} width={50} color={isLight ? "#d97706" : "#3b82f6"}/>
+                                </div>
+                            ) : (
+                                <SwapFormInput
+                                    initial={true}
+                                    tokenList={tokenList}
+                                    choose={setFirstToken}
+                                    selected={firstToken}
+                                    getQuote={getQuoteFirst}
+                                    value={firstAmount}
+                                    changeValue={setFirstAmount}
+                                    changeCounterValue={setSecondAmount}
+                                    loading={loading}
+                                    balance={firstBalance}
+                                />
+                            )}
+                        </div>
                 }
-                        
+
                 {ratio && (
                     <>
                         <div className="w-full h-3 flex items-center justify-center py-4">
-                        <div className="w-[95%] h-full flex items-center justify-end text-sm text-white font-semibold">
-                            {`1 CMT = ${ratio} ETH`}
+                            <div
+                                className="w-[95%] h-full flex items-center justify-end text-sm text-white font-semibold">
+                                {`1 CMT = ${ratio} ETH`}
                             </div>
                         </div>
                     </>
@@ -319,7 +326,8 @@ const SwapForm = ({
                         </div>
                     </div>
                 )} */}
-                <SwapButton setLoginModalOpen={setLoginModalOpen} isLogin={isLogin} setIsLogin={setIsLogin} trySwap={makeSwap}/>
+                <SwapButton setLoginModalOpen={setLoginModalOpen} isLogin={isLogin} setIsLogin={setIsLogin}
+                            trySwap={makeSwap}/>
             </div>
         </form>
     );
