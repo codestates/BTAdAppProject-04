@@ -88,7 +88,9 @@ const SwapFormInput = ({
             isSelecting={setIsSelecting}
           />
         )}
-          <div className={"align-bottom font-normal text-right text-sm font-inc"}>Balance: {tokenbalance}</div>
+
+          <div className={"whitespace-nowrap align-bottom font-normal text-right text-sm font-inc"}>Balance: {tokenbalance}</div>
+
         </div>
 
       </div>

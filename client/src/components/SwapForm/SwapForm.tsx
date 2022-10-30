@@ -276,7 +276,7 @@ const SwapForm = ({
                             changeValue={setFirstAmount}
                             changeCounterValue={setFirstAmount}
                             loading={loading}
-                            balance={firstBalance}
+                            balance={secondBalance}
                         />
                         <div className={"flex justify-center items-center "}>
                             <SwitchButton></SwitchButton>
@@ -296,7 +296,7 @@ const SwapForm = ({
                                 changeValue={setFirstAmount}
                                 changeCounterValue={setSecondAmount}
                                 loading={loading}
-                                balance={secondBalance}
+                                balance={firstBalance}
                             />
                         )}
                     </div>
