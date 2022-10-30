@@ -53,11 +53,10 @@ const SwapForm = ({
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);
     const {t} = useTranslation();
-    const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:"",address:"",decimals: 0,symbol:"WETH"});
-    const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:"",address:"",decimals: 0,symbol:"CMT"});
+    const [firstToken, setFirstToken] = useState<SelectedToken>({name:"Wrapped Ether",logo:"",address:process.env.REACT_APP_WETH_ADDRESS,decimals: 0,symbol:"WETH"});
+    const [secondToken, setSecondToken] = useState<SelectedToken>({name:"CodeMonkey Token",logo:"",address:process.env.REACT_APP_CMT_ADDRESS,decimals: 0,symbol:"CMT"});
     const [firstAmount, setFirstAmount] = useState<any>();
     const [secondAmount, setSecondAmount] = useState<any>();
-    const [gas, setGas] = useState<number | undefined | string>();
 
     const [provider, setProvider] = useState<any>();
     const [signer, setSigner] = useState<any>();
@@ -67,7 +66,6 @@ const SwapForm = ({
     const [loading, setLoading] = useState(false);
     const [firstBalance, setFirstBalance] = useState<any>();
     const [secondBalance, setSecondBalance] = useState<any>();
-
 
     useEffect(() => {
         onLoad();
@@ -84,12 +82,12 @@ const SwapForm = ({
                 setSignerAddress(address);
             })
 
-        const wethBalace = await utils.getWETHBalance(signer)
-        setFirstBalance(wethBalace);
-        console.log(wethBalace)
-        const cmtBalace = await utils.getCMTBalance(signer)
-        setSecondBalance(cmtBalace);
-        console.log(cmtBalace)
+        const firstBalace = await utils.getTokenBalance(signer, firstToken.address);
+        setFirstBalance(firstBalace);
+        console.log(firstBalace)
+        const secondBalace = await utils.getTokenBalance(signer, secondToken.address);
+        setSecondBalance(secondBalace);
+        console.log(secondBalace)
     };
 
     const makeSwap = async () => {
@@ -103,35 +101,17 @@ const SwapForm = ({
         setSecondAmount("");
         setRatio("");
 
-        const wethBalace = await utils.getWETHBalance(signer)
-        setFirstBalance(wethBalace);
-        console.log(wethBalace)
-        const cmtBalace = await utils.getCMTBalance(signer)
-        setSecondBalance(cmtBalace);
-        console.log(cmtBalace)
-
-        /* const amount = Number(Number(firstAmount) * 10 ** firstToken.decimals);
-        const address = await Moralis.User.current()?.get("ethAddress");
-        openTransactionModal(true);
-        try {
-            const res = await Moralis.Plugins.oneInch.swap({
-                chain: chain,
-                fromTokenAddress: firstToken.address,
-                toTokenAddress: secondToken.address,
-                amount,
-                fromAddress: address,
-                slippage: 1,
-            });
-            openTransactionModal(true);
-            getTxHash(res.transactionHash);
-            setMadeTx(true);
-        } catch (error) {
-            let message;
-            if (error instanceof Error) message = error.message;
-            else message = String((error as Error).message);
-            getErrorMessage(message);
-        } */
+        const firstBalace = await utils.getTokenBalance(signer, firstToken.address);
+        setFirstBalance(firstBalace);
+        console.log(firstBalace)
+        const secondBalace = await utils.getTokenBalance(signer, secondToken.address);
+        setSecondBalance(secondBalace);
+        console.log(secondBalace)
     };
+
+    useEffect(() => {
+        onLoad();
+    }, [firstToken, secondToken, isLogin, setIsLogin]);
 
     const getQuoteFirst = async (val: string) => {
         setLoading(true);
@@ -160,27 +140,6 @@ const SwapForm = ({
             setLoading(false);
         }
 
-        /* const amount = Number(Number(val) * 10 ** firstToken.decimals);
-        setFirstAmount(val);
-        if (amount === 0 || amount === undefined) {
-            setFirstAmount("");
-            setSecondAmount("");
-            setGas(undefined);
-            setTimeout(() => {
-                if (secondAmount !== "") {
-                    setSecondAmount("");
-                }
-            }, 300);
-        } else if (firstToken.address && secondToken.address) {
-            const quote = await Moralis.Plugins.oneInch.quote({
-                chain, // The blockchain you want to use (eth/bsc/polygon)
-                fromTokenAddress: firstToken.address, // The token you want to swap
-                toTokenAddress: secondToken.address, // The token you want to receive
-                amount,
-            });
-            setSecondAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
-            setGas(quote.estimatedGas);
-        } */
     };
 
     const getQuoteSecond = async (val: string) => {
@@ -196,7 +155,7 @@ const SwapForm = ({
                 signerAddress
             ).then(data => {
                 setTransaction(data[0]);
-                setSecondAmount(data[1]);
+                setFirstAmount(data[1]);
                 setRatio(data[2]);
                 setLoading(false);
                 console.log("here", transaction);
@@ -313,7 +272,11 @@ const SwapForm = ({
                         <div className="w-full h-3 flex items-center justify-center py-4">
                             <div
                                 className="w-[95%] h-full flex items-center justify-end text-sm text-white font-semibold">
-                                {`1 CMT = ${ratio} ETH`}
+                                {isSwitch ? 
+                                    `1 ${secondToken.symbol} = ${ratio} ${firstToken.symbol}`
+                                    : 
+                                    `1 ${firstToken.symbol} = ${ratio} ${secondToken.symbol}`
+                                }
                             </div>
                         </div>
                     </>

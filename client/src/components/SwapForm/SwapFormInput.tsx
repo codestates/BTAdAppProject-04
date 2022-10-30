@@ -51,7 +51,7 @@ const SwapFormInput = ({
   React.useEffect(() => {
     setTokenBalance(Number(balance).toFixed(3));
   }, [balance]);
-
+  
   return (
     <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex justify-center items-center p-5">
       <div className="flex items-center w-full ">
@@ -88,9 +88,10 @@ const SwapFormInput = ({
             isSelecting={setIsSelecting}
           />
         )}
-
-          <div className={"whitespace-nowrap align-bottom font-normal text-right text-sm font-inc"}>Balance: {tokenbalance}</div>
-
+          {balance && 
+          (
+            <div className={"whitespace-nowrap align-bottom font-normal text-right text-sm font-inc"}>Balance: {tokenbalance}</div>
+          )}
         </div>
 
       </div>

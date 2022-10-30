@@ -27,9 +27,13 @@ const TokenSelectModal = ({
   const [searchedValue, setSearchedValue] = React.useState("");
   const [customTokenList, setCustomTokenList] = React.useState<TokenDetails[]>(tokenList);
 
-  const arr = [{logoURI: '', name: 'CMT', symbol: 'CMT', tags: [],
+  const arr = [{logoURI: '', name: 'CodeMonkey Token', symbol: 'CMT', tags: [],
   address: '0xfbf685cef334fcbbe4ecb45ccc9e1976e08b15df', decimals: 18}];
-  arr.push({logoURI: '', name: 'WETH', symbol: 'WETH', tags: [],
+  arr.push({logoURI: '', name: 'BlueChipToken', symbol: 'BCT', tags: [],
+  address: '0x8a928c5c8417A3481675C0CDa5eBDDcbA464ba93', decimals: 18});
+  arr.push({logoURI: '', name: 'YerinToken', symbol: 'YRT', tags: [],
+  address: '0x8C7F591f92D654aF47fA1A98076966Ef2915003d', decimals: 18});
+  arr.push({logoURI: '', name: 'Wrapped Ether', symbol: 'WETH', tags: [],
   address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', decimals: 18});
 
   React.useEffect(() => {
