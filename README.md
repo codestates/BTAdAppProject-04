@@ -1,6 +1,6 @@
-<p align="middle" >
+
 # BTAdAppProject-04 Bithumb Swap - team : Swapper
-    </p>
+
 
 <p align="middle" >
     <img src="https://user-images.githubusercontent.com/80636401/198891935-9841387d-3ad9-4c0b-a2a0-d7dd533af3ae.png" alt="logo"/>
