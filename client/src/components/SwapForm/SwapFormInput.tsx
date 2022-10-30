@@ -50,7 +50,7 @@ const SwapFormInput = ({
   }, []);
 
   return (
-    <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex items-center p-5">
+    <div className="w-full h-20 rounded-2xl mb-2 bg-gray-100 flex justify-center items-center p-5">
       <div className="flex items-center w-full ">
         {
           inputValue ?
@@ -58,8 +58,8 @@ const SwapFormInput = ({
                   className="min-w-0 h-full rounded-2xl bg-gray-100 text-3xl font-medium font-inc focus:outline-none px-1"
                   placeholder={t("swap_form.placeholder")}
                   type="number"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
-                  value={inputValue}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => getQuote(e.target.value)}
+                    value={inputValue}
               />
               :
               <DebounceInput
@@ -70,11 +70,13 @@ const SwapFormInput = ({
                   value={''}
               />
         }
+        <div>
         <SwapFormChangeTokenButton
           initial={initial}
           select={setIsSelecting}
           selected={selected}
         />
+
         {isSelecting && (
           <TokenSelectModal
             tokenList={tokenList}
@@ -83,7 +85,9 @@ const SwapFormInput = ({
             isSelecting={setIsSelecting}
           />
         )}
-       
+          <div className={"align-bottom font-normal text-right text-sm font-inc"}>Balance: {0}</div>
+        </div>
+
       </div>
       
     </div>

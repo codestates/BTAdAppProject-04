@@ -25,14 +25,14 @@ const NavTabSwitcher = (): JSX.Element => {
         >
           {t("nav.swap")}
         </Link>
-        {/*<Link*/}
-        {/*  to="/transactions"*/}
-        {/*  className={`flex items-center justify-center rounded-3xl w-full ${*/}
-        {/*    isLight && pathName !== "/" ? "bg-white text-black" : ""*/}
-        {/*  } ${pathName !== "/" && !isLight ? "bg-blue-600 text-gray-50" : ""} ${isLight ? "text-black" : "text-white"}`}*/}
-        {/*>*/}
-        {/*  {t("nav.transactions")}*/}
-        {/*</Link>*/}
+        <Link
+          to="/pool"
+          className={`flex items-center justify-center rounded-3xl w-1/2 ${
+            isLight && pathName !== "/" ? "bg-white text-black" : ""
+          } ${pathName !== "/" && !isLight ? "bg-blue-600 text-gray-50" : ""} ${isLight ? "text-black" : "text-white"}`}
+        >
+          {t("Pool")}
+        </Link>
       </div>
     </div>
   );

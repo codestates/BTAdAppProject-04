@@ -30,6 +30,8 @@ root.render(
                 <Route path="/" element={<App />} />
                 <Route path="/#/swap?chain=mainnet" element={<App />} />
                 <Route path="transactions" element={<App />} />
+                <Route path="pool" element={<App />} />
+                <Route path="createPool" element={<App />} />
               </Routes>
             </BrowserRouter>
             </SwitchContextProvider>

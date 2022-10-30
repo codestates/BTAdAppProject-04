@@ -16,6 +16,9 @@ import {utils} from "./components/utils/utils"
 import { ethers } from 'ethers';
 // import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 
+import Pool from "./pages/Pool";
+import CreatePoolModal from "./components/UI/CreatePoolModal";
+import CreatePool from "./components/PoolForm/CreatePool";
 declare let window: any;
 
 function App(): JSX.Element {
@@ -23,17 +26,21 @@ function App(): JSX.Element {
   const { isLight } = useContext(ThemeContext);
   const windowWidth = useWindowWidth();
   const isDesktop = windowWidth >= 920;
+  const { isAuthenticated, isInitialized, initialize } = useMoralis();
   const { switchNetwork } = useChain();
   const { getSupportedTokens, data } = useOneInchTokens({ chain: chainCtx.chain });
   const [tokenList, setTokenList] = useState<TokenList | []>([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isPoolModalOpen] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [poolModalOpen, setPoolModalOpen] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [madeTx, setMadeTx] = useState(false);
   const location = useLocation();
   const pathName = location.pathname;
   const [isLogin, setIsLogin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [provider, setProvider] = useState<any>();
   const [signer, setSigner] = useState<any>();
@@ -45,11 +52,11 @@ function App(): JSX.Element {
   const [secondBalance, setSecondBalance] = useState<number | undefined | string>();
   //const [wethContract, setWethContract] = useState<any>();
   //const [uniContract, setUniContract] = useState<any>();
-  
+
   useEffect(() => {
     onLoad();
   }, [])
-  
+
   const onLoad = async () => {
     const provider = await new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
@@ -69,7 +76,7 @@ function App(): JSX.Element {
     //const uniContract = getUniContract();
     //setUniContract(uniContract);
   }
-  
+
   const closeModal = () => {
     setShowTransactionModal(false);
     setTxHash("");
@@ -120,12 +127,37 @@ function App(): JSX.Element {
           setMadeTx={setMadeTx}
         />
       )}
+
+      {pathName === "/pool" && (
+          <Pool
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              poolModalOpen={isPoolModalOpen}
+              setLoginModalOpen={setIsLoginModalOpen}
+              isLogin={isLogin}
+              setIsLogin={setIsLogin}
+          />
+      )}
+
+      {pathName === "/createPool" && (
+          <CreatePool
+              tokenList={tokenList}
+              isLogin={isLogin}
+              setIsLogin={setIsLogin}
+              setLoginModalOpen={setIsLoginModalOpen}
+              openTransactionModal={setShowTransactionModal}
+              getTxHash={setTxHash}
+              getErrorMessage={setErrorMessage}
+              setMadeTx={setMadeTx}
+          />
+      )}
+
       {/*화면사이즈 줄어들 때 스왑/트랜잭션 버튼 생성*/}
-      {/*{!isDesktop && (*/}
-      {/*  <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">*/}
-      {/*    <NavTabSwitcher />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {!isDesktop && (
+        <div className="absolute bottom-0 w-screen h-20 bg-transparent p-3 mb-6">
+          <NavTabSwitcher />
+        </div>
+      )}
     </div>
   );
 }
