@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext, useState} from "react";
 import { TokenList } from "../types";
 import ThemeContext from "../context/theme-context";
 import {useMoralis} from "react-moralis";
@@ -6,30 +6,36 @@ import { useTranslation } from "react-i18next";
 import Moralis from "moralis";
 import { ChainHex, TransactionList } from "../types";
 import ChainContext from "../context/chain-context";
+import CreatePoolModal from "../components/UI/CreatePoolModal";
 
 type PoolProps = {
-    setLoginModalOpen(val: boolean): void;
+    poolModalOpen: boolean;
+    setPoolModalOpen(val: boolean): void;
+    isOpen: boolean;
+    setIsOpen(val: boolean): void;
 };
 
-const Pool = ({
-                  setLoginModalOpen,
-              }: PoolProps): JSX.Element => {
+const Pool = ({isOpen, setIsOpen, poolModalOpen, setPoolModalOpen, }: PoolProps): JSX.Element => {
     const {isLight} = React.useContext(ThemeContext);
     const { isAuthenticated } = useMoralis();
-
+    const [isCreatePoolModalOpen, setIsCreatePoolModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     return (
-        <div className="flex items-center justify-center flex-grow">
-            {!isAuthenticated && (
-                <div className={isLight ? styles.light : styles.dark}>
-                    <button
-                        className={isLight ? styles.connectLight : styles.connectDark}
-                        onClick={() => setLoginModalOpen(true)}
-                    >
-                        {("Create Pool")}
-                    </button>
-                </div>
-            )}
-        </div>
+        <>
+            {poolModalOpen && <CreatePoolModal close={setPoolModalOpen} open={setIsOpen} setLoginModalOpen={setIsLoginModalOpen}/>}
+            <div className="flex items-center justify-center flex-grow">
+                {!isAuthenticated && (
+                    <div className={isLight ? styles.light : styles.dark}>
+                        <button
+                            className={isLight ? styles.connectLight : styles.connectDark}
+                            onClick={() => setPoolModalOpen(true)}
+                        >
+                            {("Create Pool")}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

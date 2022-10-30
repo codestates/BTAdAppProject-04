@@ -16,6 +16,7 @@ import NavTabSwitcher from "./components/NavBar/NavTabSwitcher";
 import { ethers } from 'ethers';
 import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 import Pool from "./pages/Pool";
+import CreatePoolModal from "./components/UI/CreatePoolModal";
 declare let window: any;
 
 function App(): JSX.Element {
@@ -28,13 +29,16 @@ function App(): JSX.Element {
   const { getSupportedTokens, data } = useOneInchTokens({ chain: chainCtx.chain });
   const [tokenList, setTokenList] = useState<TokenList | []>([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isPoolModalOpen] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [poolModalOpen, setPoolModalOpen] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [madeTx, setMadeTx] = useState(false);
   const location = useLocation();
   const pathName = location.pathname;
   const [isLogin, setIsLogin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [provider, setProvider] = useState<any>();
   const [signer, setSigner] = useState<any>();
@@ -92,6 +96,13 @@ function App(): JSX.Element {
           errorMessage={errorMessage}
         />
       )}
+      {poolModalOpen &&
+          <CreatePoolModal
+              close={setPoolModalOpen}
+              open={setIsOpen}
+              setLoginModalOpen={setIsLoginModalOpen}
+          />
+      }
       <NavBar isLogin={isLogin} setIsLogin={setIsLogin} loginModalOpen={isLoginModalOpen} setLoginModalOpen={setIsLoginModalOpen} />
       {pathName === "/" && (
         <Swap
@@ -116,7 +127,10 @@ function App(): JSX.Element {
 
       {pathName === "/pool" && (
           <Pool
-              setLoginModalOpen={setIsLoginModalOpen}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              poolModalOpen={isPoolModalOpen}
+              setPoolModalOpen={setPoolModalOpen}
           />
       )}
 
