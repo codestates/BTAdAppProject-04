@@ -1,37 +1,89 @@
 import React, {useContext, useState} from "react";
-import { TokenList } from "../types";
+import {TokenList} from "../types";
 import ThemeContext from "../context/theme-context";
 import {useMoralis} from "react-moralis";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import Moralis from "moralis";
-import { ChainHex, TransactionList } from "../types";
+import {ChainHex, TransactionList} from "../types";
 import ChainContext from "../context/chain-context";
 import CreatePoolModal from "../components/UI/CreatePoolModal";
+import Web3 from "web3";
+import {Link} from "react-router-dom";
+
+declare let window: any;
 
 type PoolProps = {
     poolModalOpen: boolean;
-    setPoolModalOpen(val: boolean): void;
     isOpen: boolean;
     setIsOpen(val: boolean): void;
+    setLoginModalOpen(val: boolean): void;
+    isLogin: boolean;
+    setIsLogin(val: boolean): void;
 };
 
-const Pool = ({isOpen, setIsOpen, poolModalOpen, setPoolModalOpen, }: PoolProps): JSX.Element => {
+const Pool = ({isOpen, setIsOpen, poolModalOpen, setLoginModalOpen, isLogin, setIsLogin}: PoolProps): JSX.Element => {
     const {isLight} = React.useContext(ThemeContext);
-    const { isAuthenticated } = useMoralis();
+    // const { isAuthenticated } = useMoralis();
     const [isCreatePoolModalOpen, setIsCreatePoolModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+
+    // FIXME
+    const [isAuthenticated, setisAuthenticated] = React.useState(false);
+    React.useEffect(() => {
+        getAccount();
+    }, []);
+    React.useEffect(() => {
+        console.log(isLogin);
+        getAccount(); // 계정 설정
+    }, [isLogin]);
+
+    const getAccount = async () => {
+        if (typeof (window.ethereum) == "undefined") {
+            setisAuthenticated(false);
+        } else {
+            const web3 = new Web3(window.ethereum);
+            await web3
+                .eth
+                .getAccounts((error, result) => {
+                    if (error) {
+                        setisAuthenticated(false);
+                        console.log(error);
+                    } else {
+                        if (result[0] !== undefined) {
+                            setisAuthenticated(true);
+                        } else {
+                            setisAuthenticated(false);
+                        }
+                    }
+                });
+        }
+    };
+
     return (
         <>
-            {poolModalOpen && <CreatePoolModal close={setPoolModalOpen} open={setIsOpen} setLoginModalOpen={setIsLoginModalOpen}/>}
             <div className="flex items-center justify-center flex-grow">
                 {!isAuthenticated && (
                     <div className={isLight ? styles.light : styles.dark}>
                         <button
                             className={isLight ? styles.connectLight : styles.connectDark}
-                            onClick={() => setPoolModalOpen(true)}
+                            onClick={() => setLoginModalOpen(true)}
                         >
-                            {("Create Pool")}
+                            {("Connect Wallet")}
                         </button>
+                    </div>
+                )}
+                {isAuthenticated && (
+                    <div className={isLight ? styles.light : styles.dark}>
+
+                        <Link to={"/createPool"}>
+                            <button
+                                className={isLight ? styles.connectLight : styles.connectDark}
+
+                            >
+                                {("Create Pool")}
+                            </button>
+                        </Link>
                     </div>
                 )}
             </div>

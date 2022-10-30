@@ -12,6 +12,7 @@ export type TokenDetails = {
 export type TokenList = TokenDetails[];
 
 export type Chain = "bsc" | "eth" | "polygon";
+export type Fee = "0.01" | "0.05" | "0.3" | "1";
 
 export type SelectedToken = {
   name?: string;

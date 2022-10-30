@@ -16,9 +16,9 @@ import {utils} from "./components/utils/utils"
 import { ethers } from 'ethers';
 // import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 
-import { getWethContract, getUniContract, getPrice, runSwap } from './AlphaRouterService';
 import Pool from "./pages/Pool";
 import CreatePoolModal from "./components/UI/CreatePoolModal";
+import CreatePool from "./components/PoolForm/CreatePool";
 declare let window: any;
 
 function App(): JSX.Element {
@@ -106,13 +106,6 @@ function App(): JSX.Element {
           errorMessage={errorMessage}
         />
       )}
-      {poolModalOpen &&
-          <CreatePoolModal
-              close={setPoolModalOpen}
-              open={setIsOpen}
-              setLoginModalOpen={setIsLoginModalOpen}
-          />
-      }
       <NavBar isLogin={isLogin} setIsLogin={setIsLogin} loginModalOpen={isLoginModalOpen} setLoginModalOpen={setIsLoginModalOpen} />
       {pathName === "/" && (
         <Swap
@@ -140,7 +133,22 @@ function App(): JSX.Element {
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               poolModalOpen={isPoolModalOpen}
-              setPoolModalOpen={setPoolModalOpen}
+              setLoginModalOpen={setIsLoginModalOpen}
+              isLogin={isLogin}
+              setIsLogin={setIsLogin}
+          />
+      )}
+
+      {pathName === "/createPool" && (
+          <CreatePool
+              tokenList={tokenList}
+              isLogin={isLogin}
+              setIsLogin={setIsLogin}
+              setLoginModalOpen={setIsLoginModalOpen}
+              openTransactionModal={setShowTransactionModal}
+              getTxHash={setTxHash}
+              getErrorMessage={setErrorMessage}
+              setMadeTx={setMadeTx}
           />
       )}
 
