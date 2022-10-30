@@ -1,7 +1,9 @@
 # BTAdAppProject-04
+
 <p align="middle" >
-![Borcelle Academy](https://user-images.githubusercontent.com/80636401/198891935-9841387d-3ad9-4c0b-a2a0-d7dd533af3ae.png)
-  </p>
+    <img src="https://user-images.githubusercontent.com/80636401/198891935-9841387d-3ad9-4c0b-a2a0-d7dd533af3ae.png" alt="logo"/>
+</p>
+
 <h1 align="middle">Bithumb Swap</h1>
 <h3 align="middle">ERC-20 토큰 스왑 서비스 DAPP</h3>
 
