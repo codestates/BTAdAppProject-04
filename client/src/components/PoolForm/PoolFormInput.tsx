@@ -6,7 +6,7 @@ import {TokenList} from "../../types";
 import type {SelectedToken} from "../../types";
 import {DebounceInput} from "react-debounce-input";
 
-type SwapFormInputProps = {
+type PoolFormInputProps = {
     initial?: boolean;
     tokenList: TokenList;
     choose(val: SelectedToken): void;
@@ -26,7 +26,7 @@ const PoolFormInput = ({
                            getQuote,
                            changeValue,
                            changeCounterValue,
-                       }: SwapFormInputProps): JSX.Element => {
+                       }: PoolFormInputProps): JSX.Element => {
     const [isSelecting, setIsSelecting] = React.useState(false);
     const {t} = useTranslation();
     const [inputValue, setInputValue] = React.useState<number | undefined | string>();

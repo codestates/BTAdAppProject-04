@@ -22,7 +22,7 @@ import PoolFormSelectFee from "./PoolFormSelectFee";
 
 declare let window: any;
 
-type SwapFormProps = {
+type CreatePoolProps = {
     tokenList: TokenList;
     isLogin: boolean;
     setIsLogin(val: boolean): void;
@@ -42,7 +42,7 @@ const CreatePool = ({
                         getTxHash,
                         getErrorMessage,
                         setMadeTx,
-                    }: SwapFormProps): JSX.Element => {
+                    }: CreatePoolProps): JSX.Element => {
     const {isLight} = useContext(ThemeContext);
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);
@@ -193,16 +193,7 @@ const CreatePool = ({
                         changeCounterValue={setSecondAmount}
                     />
 
-                    <PoolFormSelectFee
-                        initial={true}
-                        tokenList={tokenList}
-                        choose={setFirstToken}
-                        selected={firstToken}
-                        getQuote={getQuoteFirst}
-                        value={firstAmount}
-                        changeValue={setFirstAmount}
-                        changeCounterValue={setSecondAmount}
-                    />
+                    <PoolFormSelectFee/>
 
                     <div className="w-full flex justify-between rounded-3xl p-2 text-neutral-50">
                         <span className="font-semibold">{t("pool_form.deposit")}</span>

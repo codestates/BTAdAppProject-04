@@ -22,7 +22,7 @@ import PoolFormSelectFee from "./PoolFormSelectFee";
 
 declare let window: any;
 
-type SwapFormProps = {
+type PoolFormProps = {
     tokenList: TokenList;
     isLogin: boolean;
     setIsLogin(val: boolean): void;
@@ -42,7 +42,7 @@ const CreatePool = ({
                         getTxHash,
                         getErrorMessage,
                         setMadeTx,
-                    }: SwapFormProps): JSX.Element => {
+                    }: PoolFormProps): JSX.Element => {
     const {isLight} = useContext(ThemeContext);
     const {chain} = useContext(ChainContext);
     const {isSwitch} = useContext(SwitchContext);

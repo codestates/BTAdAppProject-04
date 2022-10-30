@@ -14,7 +14,7 @@ type SwapFormChangeTokenButtonProps = {
   selected: SelectedToken;
 };
 
-const SwapFormChangeTokenButton = ({
+const PoolFormChangeTokenButton = ({
   initial,
   select,
   selected,
@@ -65,4 +65,4 @@ const styles = {
   changeDark: "bg-blue-500 text-gray-200",
 };
 
-export default SwapFormChangeTokenButton;
+export default PoolFormChangeTokenButton;

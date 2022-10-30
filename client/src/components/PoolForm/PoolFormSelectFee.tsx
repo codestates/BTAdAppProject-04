@@ -8,26 +8,10 @@ import {DebounceInput} from "react-debounce-input";
 import SelectedFee from "./SelectedFee";
 
 type PoolFormSelectFeeProps = {
-    initial?: boolean;
-    tokenList: TokenList;
-    choose(val: SelectedToken): void;
-    selected: SelectedToken;
-    getQuote(val: string): void;
-    value: number | undefined | string;
-    changeValue(val: number | undefined | string): void;
-    changeCounterValue(val: number | undefined | string): void;
+
 };
 
-const PoolFormSelectFee = ({
-                          initial,
-                          tokenList,
-                          choose,
-                          selected,
-                          value,
-                          getQuote,
-                          changeValue,
-                          changeCounterValue,
-                      }: PoolFormSelectFeeProps): JSX.Element => {
+const PoolFormSelectFee = ({}: PoolFormSelectFeeProps): JSX.Element => {
     const [isSelectFee, setIsSelectFee] = React.useState("");
     const {t} = useTranslation();
 
@@ -87,9 +71,9 @@ const PoolFormSelectFee = ({
 
 const styles = {
     selectedStyle:
-        "border-2 border-solid border-white w-full rounded-3xl p-2 select-none",
+        "border-2 border-solid border-white w-full rounded-3xl p-2 m-1 select-none",
     basis:
-        "border-2 border-solid border-black w-full rounded-3xl p-2 select-none",
+        "border-2 border-solid border-cyan-700 w-full rounded-3xl p-2 m-1 select-none",
 
 };
 
