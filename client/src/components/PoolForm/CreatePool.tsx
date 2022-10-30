@@ -19,6 +19,7 @@ import PoolFormPair from "./PoolFormPair";
 import PoolFormInput from "./PoolFormInput";
 import PoolButton from "./PoolButton";
 import PoolFormSelectFee from "./PoolFormSelectFee";
+import PoolFormSetPrice from "./PoolFormSetPrice";
 
 declare let window: any;
 
@@ -217,6 +218,18 @@ const CreatePool = ({
                         value={secondAmount}
                         changeValue={setFirstAmount}
                         changeCounterValue={setFirstAmount}
+                    />
+
+                    <div className="w-full flex justify-between rounded-3xl p-2 text-neutral-50">
+                        <span className="font-semibold">{t("pool_form.price")}</span>
+                    </div>
+                    <PoolFormSetPrice tokenList={tokenList}
+                                      choose={setSecondToken}
+                                      selected={secondToken}
+                                      getQuote={getQuoteSecond}
+                                      value={secondAmount}
+                                      changeValue={setFirstAmount}
+                                      changeCounterValue={setFirstAmount}
                     />
 
                     <PoolButton setLoginModalOpen={setLoginModalOpen}

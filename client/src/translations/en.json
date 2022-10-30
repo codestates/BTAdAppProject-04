@@ -3,7 +3,8 @@
     "liquidity": "Add Liquidity",
     "select": "Select Pair",
     "deposit": "Deposit Amounts",
-    "enter": "Enter an amount"
+    "enter": "Enter an amount",
+    "price": "Set Price Range"
   },
   "swap_form": {
     "swap": "Swap",
