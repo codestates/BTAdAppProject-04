@@ -20,30 +20,41 @@ const CMT_Name = "CodeMonkeyToken";
 const CMT_Symbol = "CMT";
 const CMT_ADDRESS = process.env.REACT_APP_CMT_ADDRESS;
 
+const BCT_Name = "BlueChipToken";
+const BCT_Symbol = "BCT";
+const BCT_ADDRESS = process.env.REACT_APP_BCT_ADDRESS;
+
+const YRT_Name = "YerinToken";
+const YRT_Symbol = "YRT";
+const YRT_ADDRESS = process.env.REACT_APP_YRT_ADDRESS;
+
 
 const WETH = new Token(chainId, WETH_ADDRESS, 18, WETH_Symbol, WETH_Name);
 const CMT = new Token(chainId, CMT_ADDRESS, 18, CMT_Symbol, CMT_Name);
+const BCT = new Token(chainId, BCT_ADDRESS, 18, BCT_Symbol, BCT_Name);
+const YRT = new Token(chainId, YRT_ADDRESS, 18, YRT_Symbol, YRT_Name);
 
 
-const WethContract = () => new ethers.Contract(WETH_ADDRESS, ABI, web3Provider);
-const CMTContract = () => new ethers.Contract(CMT_ADDRESS, ABI, web3Provider);
+// const WethContract = () => new ethers.Contract(WETH_ADDRESS, ABI, web3Provider);
+// const CMTContract = () => new ethers.Contract(CMT_ADDRESS, ABI, web3Provider);
+// const BCTContract = () => new ethers.Contract(BCT_ADDRESS, ABI, web3Provider);
+// const YRTContract = () => new ethers.Contract(YRT_ADDRESS, ABI, web3Provider);
 
 let tokenMap = new Map();
 tokenMap.set("WETH",WETH)
 tokenMap.set("CMT",CMT)
+tokenMap.set("BCT",BCT)
+tokenMap.set("YRT",YRT)
 
 export const utils = {
-    getCMTBalance: async (signer) => {  // signer 의 토큰 개수 리턴
-        const CMTContract = new ethers.Contract(process.env.REACT_APP_CMT_ADDRESS, ABI, signer)
-        return ethers.utils.formatEther(await CMTContract.balanceOf(signer.getAddress()))
+    getTokenBalance: async (signer,contractAddress) => {  // signer 의 토큰 개수 리턴
+        const Contract = new ethers.Contract(contractAddress, ABI, signer)
+        return ethers.utils.formatEther(await Contract.balanceOf(signer.getAddress()))
     },
     getETHBalance: async (signer) => {
         return ethers.utils.formatEther(await signer.getBalance())
     },
-    getWETHBalance: async (signer) => {
-        const WETHContract = new ethers.Contract(WETH_ADDRESS, ABI, signer)
-        return ethers.utils.formatEther(await WETHContract.balanceOf(signer.getAddress()))
-    },
+
     getPrice: async (inputToken,outputToken,inputAmount, slippageAmount, deadline, walletAddress) => {
         console.log(inputToken,outputToken,inputAmount, slippageAmount, deadline, walletAddress)
         const percentSlippage = new Percent(slippageAmount, 100);
